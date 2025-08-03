@@ -87,6 +87,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli@latest
+
       - name: Verify Railway secrets
         run: |
           echo "Checking if Railway secrets are set..."
