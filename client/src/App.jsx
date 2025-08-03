@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { API_BASE_URL } from './config/api.js';
 import './App.css';
 
 function App() {
@@ -6,15 +8,14 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Test server connection
-    fetch('http://localhost:5000/api/health')
-      .then(res => res.json())
-      .then(data => {
-        setServerData(data);
+    // Use axios instead of fetch
+    axios.get(`${API_BASE_URL}/api/health`)
+      .then(response => {
+        setServerData(response.data);
         setLoading(false);
       })
-      .catch(err => {
-        console.error('Server connection failed:', err);
+      .catch(error => {
+        console.error('Server connection failed:', error);
         setLoading(false);
       });
   }, []);
