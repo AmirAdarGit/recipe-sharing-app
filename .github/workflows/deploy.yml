@@ -113,8 +113,10 @@ jobs:
 
       - name: Deploy to Railway
         run: |
-          railway link ${{ secrets.RAILWAY_PROJECT_ID }}
-          railway deploy
+          echo "🚂 Starting Railway deployment..."
+          railway deploy --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
         working-directory: ./server
