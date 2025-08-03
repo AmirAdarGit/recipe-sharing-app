@@ -107,8 +107,8 @@ jobs:
         run: npm install -g @railway/cli@latest
 
       - name: Deploy to Railway
-        run: railway deploy --service $RAILWAY_SERVICE_ID
+        run: railway deploy
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
+          RAILWAY_SERVICE: ${{ secrets.RAILWAY_SERVICE_ID }}
         working-directory: ./server
