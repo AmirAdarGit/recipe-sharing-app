@@ -1,6 +1,14 @@
-# Full Stack React PWA + Node.js Setup Guide
+# Recipe Sharing App - Documentation Archive
 
-## 🚀 Project Overview
+This file contains consolidated documentation that was previously stored in separate files at the project root.
+
+---
+
+# PROJECT SETUP DOCUMENTATION
+
+## Full Stack React PWA + Node.js Setup Guide
+
+### 🚀 Project Overview
 - **Frontend**: React PWA (Progressive Web App)
 - **Backend**: Node.js + Express API
 - **Database**: MongoDB Atlas
@@ -307,3 +315,53 @@ npm run dev
 ```
 
 **Ready to start with the latest Node 22 setup? This ensures you're using cutting-edge performance and features! 🚀**
+
+---
+
+# TODO LIST DOCUMENTATION
+
+## 🚀 Setup & Configuration
+- [ ]
+
+## 🎨 Frontend Development
+- [ ]
+
+## 🔧 Backend Development
+- [ ]
+
+## 🔐 Authentication
+- [ ]
+
+## 📱 PWA Features
+- [ ]
+
+## 🧪 Testing
+- [ ]
+
+## 🚀 Deployment
+- [ ]
+
+## 🐛 Bug Fixes
+- [ ]
+
+## ✨ Features
+- [ ]
+
+## 📚 Documentation
+- [ ]
+
+---
+
+## ✅ Completed
+- [ ]
+
+---
+
+**Notes:**
+- Use `- [x]` to mark items as completed
+- Move completed items to the "Completed" section
+- Add priority levels: 🔥 High, 🟡 Medium, 🟢 Low
+
+---
+
+**Archive Note**: This documentation was consolidated from PROJECT_SETUP.md and TODO.md files that were previously in the project root. For current status and recent updates, see STATUS.md in this docs folder.
