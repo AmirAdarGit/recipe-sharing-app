@@ -112,9 +112,7 @@ jobs:
           RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
 
       - name: Deploy to Railway
-        run: |
-          echo "🚂 Starting Railway deployment..."
-          railway deploy --detach
+        run: railway deploy
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
