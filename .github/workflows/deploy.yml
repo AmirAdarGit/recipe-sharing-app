@@ -113,8 +113,60 @@ jobs:
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
           RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
 
+      - name: Debug Railway Environment
+        run: |
+          echo "🔍 Debugging Railway deployment..."
+          echo "Working directory: $(pwd)"
+          echo "Files in current directory:"
+          ls -la
+          echo ""
+          echo "Checking if package.json exists:"
+          if [ -f "package.json" ]; then
+            echo "✅ package.json found"
+            echo "Package.json content:"
+            cat package.json
+          else
+            echo "❌ package.json not found"
+          fi
+          echo ""
+          echo "Railway CLI version:"
+          railway --version
+          echo ""
+          echo "Environment variables (masked):"
+          echo "RAILWAY_TOKEN: ${RAILWAY_TOKEN:0:10}..."
+          echo "RAILWAY_PROJECT_ID: ${RAILWAY_PROJECT_ID}"
+          echo "RAILWAY_ENVIRONMENT_ID: ${RAILWAY_ENVIRONMENT_ID}"
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
+        working-directory: ./server
+
+      - name: Login to Railway
+        run: |
+          echo "🔐 Logging into Railway..."
+          railway login --service-token ${{ secrets.RAILWAY_TOKEN }}
+          echo "✅ Railway login successful"
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        working-directory: ./server
+
+      - name: Check Railway Status
+        run: |
+          echo "📊 Checking Railway status..."
+          railway status || echo "Status command failed"
+          echo ""
+          echo "Checking Railway projects:"
+          railway projects || echo "Projects command failed"
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        working-directory: ./server
+
       - name: Deploy to Railway
-        run: railway deploy
+        run: |
+          echo "🚀 Starting Railway deployment..."
+          echo "Attempting railway up..."
+          railway up --verbose
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
