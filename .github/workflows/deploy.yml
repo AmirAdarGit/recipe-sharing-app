@@ -44,7 +44,12 @@ jobs:
           cd client
           npm ci
           npm run build
-          
+
+      - name: Clean Vercel cache
+        run: |
+          cd client
+          rm -rf .vercel
+
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:
