@@ -41,6 +41,7 @@ npm run dev
 ## 📚 Documentation
 
 - **[Current Status](docs/STATUS.md)** - Application status, deployment URLs, and recent fixes
+- **[Project Roadmap](docs/ROADMAP.md)** - Feature planning, development phases, and timelines
 - **[Setup Guide](docs/ARCHIVE.md)** - Complete development setup and configuration
 - **[Client README](client/README.md)** - Frontend-specific documentation
 
