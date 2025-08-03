@@ -90,22 +90,28 @@ jobs:
       - name: Verify Railway secrets
         run: |
           echo "Checking if Railway secrets are set..."
-          if [ -z "${{ secrets.RAILWAY_TOKEN }}" ]; then
-            echo "❌ RAILWAY_TOKEN is not set"
+          echo "RAILWAY_TOKEN length: ${#RAILWAY_TOKEN}"
+          echo "RAILWAY_SERVICE_ID length: ${#RAILWAY_SERVICE_ID}"
+
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "❌ RAILWAY_TOKEN is not set or empty"
+            echo "Please add RAILWAY_TOKEN to your GitHub repository secrets"
             exit 1
           fi
-          if [ -z "${{ secrets.RAILWAY_SERVICE_ID }}" ]; then
-            echo "❌ RAILWAY_SERVICE_ID is not set"
+          if [ -z "$RAILWAY_SERVICE_ID" ]; then
+            echo "❌ RAILWAY_SERVICE_ID is not set or empty"
+            echo "Please add RAILWAY_SERVICE_ID to your GitHub repository secrets"
             exit 1
           fi
           echo "✅ All Railway secrets are configured"
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli@latest
-
-      - name: Deploy to Railway
+      - name: Deploy to Railway (Method 1 - CLI)
         run: |
-          echo "🚀 Starting Railway deployment..."
+          echo "� Starting Railway deployment with CLI..."
+          npm install -g @railway/cli@latest
           railway login --token "$RAILWAY_TOKEN"
           railway link "$RAILWAY_SERVICE_ID"
           railway deploy --detach
@@ -113,3 +119,13 @@ jobs:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
         working-directory: ./server
+        continue-on-error: true
+        id: railway-cli
+
+      - name: Deploy to Railway (Method 2 - Action)
+        if: steps.railway-cli.outcome == 'failure'
+        uses: bervProject/railway-deploy@v1.2.0
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          service: ${{ secrets.RAILWAY_SERVICE_ID }}
+          working-directory: ./server
