@@ -46,13 +46,15 @@ jobs:
           npm run build
           
       - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
-          working-directory: ./client
-          vercel-args: '--prod'
+        run: |
+          cd client
+          echo "$VERCEL_PROJECT_JSON" > .vercel/project.json
+          npx vercel --prod
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          VERCEL_PROJECT_JSON: '{"projectId":"${{ secrets.PROJECT_ID }}","orgId":"${{ secrets.ORG_ID }}"}'
 
   deploy-backend:
     needs: test
