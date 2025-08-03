@@ -70,12 +70,13 @@ jobs:
       - name: Deploy to Vercel
         run: |
           cd client
-          npx vercel --token "$VERCEL_TOKEN" --prod --yes
+          echo "Setting production environment variables..."
+          echo "VITE_API_URL=https://recipe-sharing-app-production.up.railway.app" > .env.production.local
+          npx vercel --token "$VERCEL_TOKEN" --prod --yes --env VITE_API_URL=https://recipe-sharing-app-production.up.railway.app
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          VITE_API_URL: https://recipe-sharing-app-production.up.railway.app
 
   deploy-backend:
     needs: test
