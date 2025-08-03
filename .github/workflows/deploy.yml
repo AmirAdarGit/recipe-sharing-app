@@ -45,17 +45,21 @@ jobs:
           npm ci
           npm run build
           
+      - name: Debug Vercel Token
+        run: |
+          echo "Token length: ${#VERCEL_TOKEN}"
+          echo "Token starts with: ${VERCEL_TOKEN:0:7}"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          
       - name: Deploy to Vercel
         run: |
           cd client
-          mkdir -p .vercel
-          echo "$VERCEL_PROJECT_JSON" > .vercel/project.json
-          npx vercel --prod
+          npx vercel --token "$VERCEL_TOKEN" --prod
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          VERCEL_PROJECT_JSON: '{"projectId":"${{ secrets.PROJECT_ID }}","orgId":"${{ secrets.ORG_ID }}"}'
 
   deploy-backend:
     needs: test
