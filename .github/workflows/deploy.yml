@@ -50,14 +50,31 @@ jobs:
           cd client
           rm -rf .vercel
 
+      - name: Verify Vercel secrets
+        run: |
+          echo "Checking if secrets are set..."
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "❌ VERCEL_TOKEN is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.ORG_ID }}" ]; then
+            echo "❌ ORG_ID is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.PROJECT_ID }}" ]; then
+            echo "❌ PROJECT_ID is not set"
+            exit 1
+          fi
+          echo "✅ All Vercel secrets are configured"
+
       - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
-          working-directory: ./client
-          vercel-args: '--prod'
+        run: |
+          cd client
+          npx vercel --token "$VERCEL_TOKEN" --prod --yes
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.PROJECT_ID }}
 
   deploy-backend:
     needs: test
