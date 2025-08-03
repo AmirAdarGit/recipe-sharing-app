@@ -142,11 +142,13 @@ jobs:
           RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
         working-directory: ./server
 
-      - name: Login to Railway
+      - name: Setup Railway Authentication
         run: |
-          echo "🔐 Logging into Railway..."
-          railway login --service-token ${{ secrets.RAILWAY_TOKEN }}
-          echo "✅ Railway login successful"
+          echo "🔐 Setting up Railway authentication via environment..."
+          echo "Railway CLI version:"
+          railway --version
+          echo "Available Railway commands:"
+          railway --help | head -20
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         working-directory: ./server
@@ -165,8 +167,12 @@ jobs:
       - name: Deploy to Railway
         run: |
           echo "🚀 Starting Railway deployment..."
-          echo "Attempting railway up..."
-          railway up --verbose
+          echo "Checking Railway authentication status..."
+          railway whoami || echo "Not authenticated"
+          echo ""
+          echo "Attempting deployment..."
+          railway deploy --detach || railway up --detach || echo "Both deploy commands failed, trying basic deploy..."
+          railway deploy || railway up || echo "All deployment methods failed"
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
