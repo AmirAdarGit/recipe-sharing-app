@@ -48,6 +48,7 @@ jobs:
       - name: Deploy to Vercel
         run: |
           cd client
+          mkdir -p .vercel
           echo "$VERCEL_PROJECT_JSON" > .vercel/project.json
           npx vercel --prod
         env:
