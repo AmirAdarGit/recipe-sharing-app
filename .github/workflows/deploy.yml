@@ -94,21 +94,24 @@ jobs:
             echo "❌ RAILWAY_TOKEN is not set"
             exit 1
           fi
-          if [ -z "$RAILWAY_SERVICE_ID" ]; then
-            echo "❌ RAILWAY_SERVICE_ID is not set"
+          if [ -z "$RAILWAY_PROJECT_ID" ]; then
+            echo "❌ RAILWAY_PROJECT_ID is not set"
+            exit 1
+          fi
+          if [ -z "$RAILWAY_ENVIRONMENT_ID" ]; then
+            echo "❌ RAILWAY_ENVIRONMENT_ID is not set"
             exit 1
           fi
           echo "✅ All Railway secrets are configured"
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
-
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli@latest
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
 
       - name: Deploy to Railway
         run: railway deploy
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_SERVICE: ${{ secrets.RAILWAY_SERVICE_ID }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
         working-directory: ./server
