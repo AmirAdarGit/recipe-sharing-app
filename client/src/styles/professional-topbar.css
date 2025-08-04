@@ -492,7 +492,7 @@
   @apply outline-none;
 
   /* Shadow */
-  box-shadow: 0 0 0 2px var(--color-border-focus);
+  /* box-shadow: 0 0 0 2px var(--color-border-focus); */
 
   /* Transform */
   transform: scale(1.02);
