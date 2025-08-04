@@ -71,8 +71,17 @@ jobs:
         run: |
           cd client
           echo "Setting production environment variables..."
-          echo "VITE_API_URL=https://recipe-sharing-app-production.up.railway.app" > .env.production.local
-          npx vercel --token "$VERCEL_TOKEN" --prod --yes --env VITE_API_URL=https://recipe-sharing-app-production.up.railway.app
+          cat > .env.production.local << EOF
+          VITE_API_URL=https://recipe-sharing-app-production.up.railway.app
+          VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+          EOF
+          npx vercel --token "$VERCEL_TOKEN" --prod --yes
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.ORG_ID }}
