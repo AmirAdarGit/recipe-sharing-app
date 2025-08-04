@@ -194,4 +194,4 @@ const AuthProvider = memo(({ children }) => {
   );
 });
 
-export { AuthProvider, useAuth };
+export { AuthProvider };

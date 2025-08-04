@@ -61,11 +61,12 @@ This roadmap outlines the planned features and improvements for the Recipe Shari
 
 ### Authentication Setup
 
-- [ ] 🔥 Firebase Auth configuration and setup *(2 days)*
-- [ ] 🔥 Google OAuth integration *(3 days)*
+- [X] 🔥 Firebase Auth configuration and setup *(2 days)*
+- [X] 🔥 Google OAuth integration *(3 days)*
 - [ ] 🔥 Facebook OAuth integration *(3 days)*
-- [ ] 🟡 Email/password authentication *(2 days)*
-- [ ] 🟡 Password reset functionality *(2 days)*
+- [X] 🟡 Email/password authentication *(2 days)*
+- [X] 🟡 Password reset functionality *(2 days)*
+- [ ] TODO: if any user can sign in ?? any email ?!
 
 ### User Management
 
