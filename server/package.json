@@ -2,14 +2,17 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "type": "module",
   "engines": {
     "node": ">=22.0.0"
   },
   "scripts": {
-    "dev": "npm run docker:start && nodemon src/index.js",
-    "start": "node src/index.js",
+    "dev": "nodemon",
+    "build": "rimraf dist && tsc",
+    "start": "node dist/index.js",
+    "start:prod": "npm run build && npm start",
+    "type-check": "tsc --noEmit",
     "docker:start": "docker run -d --name recipe-sharing-app-local -p 27017:27017 mongo:latest || docker start recipe-sharing-app-local",
     "docker:stop": "docker stop recipe-sharing-app-local",
     "docker:clean": "docker stop recipe-sharing-app-local && docker rm recipe-sharing-app-local",
@@ -26,12 +29,19 @@
     "mongoose": "^8.17.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.3",
+    "@types/mongoose": "^5.11.96",
     "@types/node": "^24.1.0",
     "concurrently": "^9.2.0",
     "cross-env": "^10.0.0",
     "eslint": "^9.32.0",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
-    "rimraf": "^6.0.1"
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
   }
 }

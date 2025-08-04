@@ -1,9 +1,15 @@
-import mongoose from 'mongoose';
-
-const { Schema } = mongoose;
+import mongoose, { Schema, Model, Types } from 'mongoose';
+import type { 
+  IRecipe, 
+  IRecipeDocument, 
+  Difficulty, 
+  RecipeCategory, 
+  CuisineType, 
+  RecipeStatus 
+} from '../types/index.js';
 
 // Recipe schema
-const recipeSchema = new Schema({
+const recipeSchema = new Schema<IRecipeDocument>({
   // Recipe basic information
   title: {
     type: String,
@@ -121,7 +127,7 @@ const recipeSchema = new Schema({
   difficulty: {
     type: String,
     required: true,
-    enum: ['easy', 'medium', 'hard'],
+    enum: ['easy', 'medium', 'hard'] as Difficulty[],
     default: 'medium'
   },
   
@@ -129,14 +135,14 @@ const recipeSchema = new Schema({
   category: {
     type: String,
     required: true,
-    enum: ['appetizer', 'main-course', 'dessert', 'beverage', 'snack', 'breakfast', 'lunch', 'dinner', 'side-dish'],
+    enum: ['appetizer', 'main-course', 'dessert', 'beverage', 'snack', 'breakfast', 'lunch', 'dinner', 'side-dish'] as RecipeCategory[],
     index: true
   },
   
   cuisine: {
     type: String,
     required: true,
-    enum: ['italian', 'chinese', 'mexican', 'indian', 'japanese', 'french', 'thai', 'mediterranean', 'american', 'korean', 'other'],
+    enum: ['italian', 'chinese', 'mexican', 'indian', 'japanese', 'french', 'thai', 'mediterranean', 'american', 'korean', 'other'] as CuisineType[],
     index: true
   },
   
@@ -241,7 +247,7 @@ const recipeSchema = new Schema({
   // Recipe status
   status: {
     type: String,
-    enum: ['draft', 'published', 'archived'],
+    enum: ['draft', 'published', 'archived'] as RecipeStatus[],
     default: 'draft',
     index: true
   },
@@ -284,56 +290,65 @@ recipeSchema.index({ difficulty: 1 });
 recipeSchema.index({ 'cookingTime.total': 1 });
 
 // Virtual for total cooking time calculation
-recipeSchema.virtual('totalTime').get(function() {
+recipeSchema.virtual('totalTime').get(function(this: IRecipeDocument) {
   return this.cookingTime.prep + this.cookingTime.cook;
 });
 
 // Instance methods
-recipeSchema.methods.incrementViews = function() {
+recipeSchema.methods.incrementViews = function(this: IRecipeDocument): Promise<IRecipeDocument> {
   this.stats.views += 1;
   return this.save();
 };
 
-recipeSchema.methods.incrementLikes = function() {
+recipeSchema.methods.incrementLikes = function(this: IRecipeDocument): Promise<IRecipeDocument> {
   this.stats.likes += 1;
   return this.save();
 };
 
-recipeSchema.methods.decrementLikes = function() {
+recipeSchema.methods.decrementLikes = function(this: IRecipeDocument): Promise<IRecipeDocument> {
   this.stats.likes = Math.max(0, this.stats.likes - 1);
   return this.save();
 };
 
-recipeSchema.methods.publish = function() {
+recipeSchema.methods.publish = function(this: IRecipeDocument): Promise<IRecipeDocument> {
   this.status = 'published';
   this.publishedAt = new Date();
   return this.save();
 };
 
-recipeSchema.methods.unpublish = function() {
+recipeSchema.methods.unpublish = function(this: IRecipeDocument): Promise<IRecipeDocument> {
   this.status = 'draft';
-  this.publishedAt = null;
+  this.publishedAt = undefined;
   return this.save();
 };
 
+// Static methods interface
+interface IRecipeModel extends Model<IRecipeDocument> {
+  findPublished(): Promise<IRecipeDocument[]>;
+  findByAuthor(authorId: Types.ObjectId): Promise<IRecipeDocument[]>;
+  findByCategory(category: RecipeCategory): Promise<IRecipeDocument[]>;
+  findByCuisine(cuisine: CuisineType): Promise<IRecipeDocument[]>;
+  searchRecipes(query: string): Promise<IRecipeDocument[]>;
+}
+
 // Static methods
-recipeSchema.statics.findPublished = function() {
+recipeSchema.statics.findPublished = function(): Promise<IRecipeDocument[]> {
   return this.find({ status: 'published', isPublic: true });
 };
 
-recipeSchema.statics.findByAuthor = function(authorId) {
+recipeSchema.statics.findByAuthor = function(authorId: Types.ObjectId): Promise<IRecipeDocument[]> {
   return this.find({ author: authorId });
 };
 
-recipeSchema.statics.findByCategory = function(category) {
+recipeSchema.statics.findByCategory = function(category: RecipeCategory): Promise<IRecipeDocument[]> {
   return this.find({ category, status: 'published', isPublic: true });
 };
 
-recipeSchema.statics.findByCuisine = function(cuisine) {
+recipeSchema.statics.findByCuisine = function(cuisine: CuisineType): Promise<IRecipeDocument[]> {
   return this.find({ cuisine, status: 'published', isPublic: true });
 };
 
-recipeSchema.statics.searchRecipes = function(query) {
+recipeSchema.statics.searchRecipes = function(query: string): Promise<IRecipeDocument[]> {
   return this.find({
     $text: { $search: query },
     status: 'published',
@@ -342,7 +357,7 @@ recipeSchema.statics.searchRecipes = function(query) {
 };
 
 // Pre-save middleware
-recipeSchema.pre('save', function(next) {
+recipeSchema.pre('save', function(this: IRecipeDocument, next) {
   // Calculate total cooking time
   this.cookingTime.total = this.cookingTime.prep + this.cookingTime.cook;
   
@@ -358,6 +373,6 @@ recipeSchema.pre('save', function(next) {
 });
 
 // Export the model
-const Recipe = mongoose.model('Recipe', recipeSchema);
+const Recipe = mongoose.model<IRecipeDocument, IRecipeModel>('Recipe', recipeSchema);
 
 export default Recipe;

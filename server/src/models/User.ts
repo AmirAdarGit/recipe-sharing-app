@@ -1,9 +1,14 @@
-import mongoose from 'mongoose';
-
-const { Schema } = mongoose;
+import mongoose, { Schema, Model } from 'mongoose';
+import type { 
+  IUser, 
+  IUserDocument, 
+  DietaryRestriction, 
+  CuisineType, 
+  SkillLevel 
+} from '../types/index.js';
 
 // User schema that integrates with Firebase Authentication
-const userSchema = new Schema({
+const userSchema = new Schema<IUserDocument>({
   // Firebase UID as primary identifier
   firebaseUid: {
     type: String,
@@ -74,17 +79,17 @@ const userSchema = new Schema({
     // Cooking preferences and dietary restrictions
     dietaryRestrictions: [{
       type: String,
-      enum: ['vegetarian', 'vegan', 'gluten-free', 'dairy-free', 'nut-free', 'keto', 'paleo', 'halal', 'kosher']
+      enum: ['vegetarian', 'vegan', 'gluten-free', 'dairy-free', 'nut-free', 'keto', 'paleo', 'halal', 'kosher'] as DietaryRestriction[]
     }],
     
     cuisinePreferences: [{
       type: String,
-      enum: ['italian', 'chinese', 'mexican', 'indian', 'japanese', 'french', 'thai', 'mediterranean', 'american', 'korean']
+      enum: ['italian', 'chinese', 'mexican', 'indian', 'japanese', 'french', 'thai', 'mediterranean', 'american', 'korean'] as CuisineType[]
     }],
     
     skillLevel: {
       type: String,
-      enum: ['beginner', 'intermediate', 'advanced'],
+      enum: ['beginner', 'intermediate', 'advanced'] as SkillLevel[],
       default: 'beginner'
     }
   },
@@ -169,43 +174,50 @@ userSchema.index({ createdAt: -1 });
 userSchema.index({ lastLoginAt: -1 });
 
 // Virtual for user's full name
-userSchema.virtual('fullName').get(function() {
+userSchema.virtual('fullName').get(function(this: IUserDocument) {
   return this.displayName;
 });
 
 // Instance methods
-userSchema.methods.updateLastLogin = function() {
+userSchema.methods.updateLastLogin = function(this: IUserDocument): Promise<IUserDocument> {
   this.lastLoginAt = new Date();
   return this.save();
 };
 
-userSchema.methods.incrementRecipeCount = function() {
+userSchema.methods.incrementRecipeCount = function(this: IUserDocument): Promise<IUserDocument> {
   this.stats.recipesCreated += 1;
   return this.save();
 };
 
-userSchema.methods.decrementRecipeCount = function() {
+userSchema.methods.decrementRecipeCount = function(this: IUserDocument): Promise<IUserDocument> {
   this.stats.recipesCreated = Math.max(0, this.stats.recipesCreated - 1);
   return this.save();
 };
 
+// Static methods interface
+interface IUserModel extends Model<IUserDocument> {
+  findByFirebaseUid(firebaseUid: string): Promise<IUserDocument | null>;
+  findByEmail(email: string): Promise<IUserDocument | null>;
+  createFromFirebaseUser(firebaseUser: any): Promise<IUserDocument>;
+}
+
 // Static methods
-userSchema.statics.findByFirebaseUid = function(firebaseUid) {
+userSchema.statics.findByFirebaseUid = function(firebaseUid: string): Promise<IUserDocument | null> {
   return this.findOne({ firebaseUid });
 };
 
-userSchema.statics.findByEmail = function(email) {
+userSchema.statics.findByEmail = function(email: string): Promise<IUserDocument | null> {
   return this.findOne({ email: email.toLowerCase() });
 };
 
-userSchema.statics.createFromFirebaseUser = function(firebaseUser) {
+userSchema.statics.createFromFirebaseUser = function(firebaseUser: any): Promise<IUserDocument> {
   const userData = {
     firebaseUid: firebaseUser.uid,
     email: firebaseUser.email,
     displayName: firebaseUser.displayName || firebaseUser.email.split('@')[0],
     photoURL: firebaseUser.photoURL,
     emailVerified: firebaseUser.emailVerified,
-    providers: firebaseUser.providerData.map(provider => ({
+    providers: firebaseUser.providerData.map((provider: any) => ({
       providerId: provider.providerId,
       uid: provider.uid,
       email: provider.email
@@ -216,12 +228,12 @@ userSchema.statics.createFromFirebaseUser = function(firebaseUser) {
 };
 
 // Pre-save middleware
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function(this: IUserDocument, next) {
   this.updatedAt = new Date();
   next();
 });
 
 // Export the model
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model<IUserDocument, IUserModel>('User', userSchema);
 
 export default User;

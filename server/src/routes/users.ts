@@ -1,10 +1,17 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import User from '../models/User.js';
+import type { 
+  ApiResponse, 
+  PaginatedResponse, 
+  CreateUserRequest, 
+  UpdateUserProfileRequest,
+  IUserDocument 
+} from '../types/index.js';
 
 const router = express.Router();
 
 // GET /api/users - Get all users (for testing)
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response<PaginatedResponse<IUserDocument>>) => {
   try {
     const users = await User.find()
       .select('-__v')
@@ -14,30 +21,40 @@ router.get('/', async (req, res) => {
     res.json({
       success: true,
       count: users.length,
+      total: users.length,
+      page: 1,
+      pages: 1,
       data: users
     });
   } catch (error) {
     console.error('Error fetching users:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({
       success: false,
       message: 'Error fetching users',
-      error: error.message
+      error: errorMessage,
+      count: 0,
+      total: 0,
+      page: 1,
+      pages: 0,
+      data: []
     });
   }
 });
 
 // GET /api/users/:firebaseUid - Get user by Firebase UID
-router.get('/:firebaseUid', async (req, res) => {
+router.get('/:firebaseUid', async (req: Request<{ firebaseUid: string }>, res: Response<ApiResponse<IUserDocument>>): Promise<void> => {
   try {
     const { firebaseUid } = req.params;
     
     const user = await User.findByFirebaseUid(firebaseUid);
     
     if (!user) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: 'User not found'
       });
+      return;
     }
     
     res.json({
@@ -46,25 +63,27 @@ router.get('/:firebaseUid', async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching user:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({
       success: false,
       message: 'Error fetching user',
-      error: error.message
+      error: errorMessage
     });
   }
 });
 
 // POST /api/users - Create or update user from Firebase Auth
-router.post('/', async (req, res) => {
+router.post('/', async (req: Request<{}, ApiResponse<IUserDocument>, CreateUserRequest>, res: Response<ApiResponse<IUserDocument>>): Promise<void> => {
   try {
     const { firebaseUid, email, displayName, photoURL, emailVerified, providerData } = req.body;
     
     // Validate required fields
     if (!firebaseUid || !email) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: 'Firebase UID and email are required'
       });
+      return;
     }
     
     // Check if user already exists
@@ -118,24 +137,29 @@ router.post('/', async (req, res) => {
     }
   } catch (error) {
     console.error('Error creating/updating user:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     
-    if (error.code === 11000) {
-      return res.status(409).json({
+    if (error && typeof error === 'object' && 'code' in error && error.code === 11000) {
+      res.status(409).json({
         success: false,
         message: 'User with this email or Firebase UID already exists'
       });
+      return;
     }
     
     res.status(500).json({
       success: false,
       message: 'Error creating/updating user',
-      error: error.message
+      error: errorMessage
     });
   }
 });
 
 // PUT /api/users/:firebaseUid/profile - Update user profile
-router.put('/:firebaseUid/profile', async (req, res) => {
+router.put('/:firebaseUid/profile', async (
+  req: Request<{ firebaseUid: string }, ApiResponse<IUserDocument>, UpdateUserProfileRequest>,
+  res: Response<ApiResponse<IUserDocument>>
+): Promise<void> => {
   try {
     const { firebaseUid } = req.params;
     const { bio, location, website, dietaryRestrictions, cuisinePreferences, skillLevel } = req.body;
@@ -143,10 +167,11 @@ router.put('/:firebaseUid/profile', async (req, res) => {
     const user = await User.findByFirebaseUid(firebaseUid);
     
     if (!user) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: 'User not found'
       });
+      return;
     }
     
     // Update profile fields
@@ -166,26 +191,31 @@ router.put('/:firebaseUid/profile', async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating user profile:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({
       success: false,
       message: 'Error updating user profile',
-      error: error.message
+      error: errorMessage
     });
   }
 });
 
 // PUT /api/users/:firebaseUid/login - Update last login time
-router.put('/:firebaseUid/login', async (req, res) => {
+router.put('/:firebaseUid/login', async (
+  req: Request<{ firebaseUid: string }>,
+  res: Response<ApiResponse<{ lastLoginAt: Date }>>
+): Promise<void> => {
   try {
     const { firebaseUid } = req.params;
     
     const user = await User.findByFirebaseUid(firebaseUid);
     
     if (!user) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: 'User not found'
       });
+      return;
     }
     
     await user.updateLastLogin();
@@ -197,26 +227,31 @@ router.put('/:firebaseUid/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating login time:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({
       success: false,
       message: 'Error updating login time',
-      error: error.message
+      error: errorMessage
     });
   }
 });
 
 // DELETE /api/users/:firebaseUid - Delete user (soft delete by setting isActive to false)
-router.delete('/:firebaseUid', async (req, res) => {
+router.delete('/:firebaseUid', async (
+  req: Request<{ firebaseUid: string }>,
+  res: Response<ApiResponse>
+): Promise<void> => {
   try {
     const { firebaseUid } = req.params;
     
     const user = await User.findByFirebaseUid(firebaseUid);
     
     if (!user) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         message: 'User not found'
       });
+      return;
     }
     
     user.isActive = false;
@@ -228,10 +263,11 @@ router.delete('/:firebaseUid', async (req, res) => {
     });
   } catch (error) {
     console.error('Error deactivating user:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({
       success: false,
       message: 'Error deactivating user',
-      error: error.message
+      error: errorMessage
     });
   }
 });
