@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import Navbar from './components/Navbar';
+import ProfessionalTopbar from './components/ProfessionalTopbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
@@ -12,6 +12,7 @@ import Favorites from './pages/Favorites';
 import SavedLinks from './pages/SavedLinks';
 import DashboardDemo from './pages/DashboardDemo';
 import './App.css';
+import './styles/professional-topbar.css';
 
 function App() {
   return (
@@ -19,16 +20,26 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            {/* Public Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
+            {/* Public Routes with ProfessionalTopbar */}
+            <Route path="/login" element={
+              <>
+                <ProfessionalTopbar />
+                <Login />
+              </>
+            } />
+            <Route path="/signup" element={
+              <>
+                <ProfessionalTopbar />
+                <SignUp />
+              </>
+            } />
 
-            {/* Protected Routes */}
+            {/* Protected Routes with ProfessionalTopbar */}
             <Route
               path="/"
               element={
                 <ProtectedRoute>
-                  <Navbar />
+                  <ProfessionalTopbar />
                   <Home />
                 </ProtectedRoute>
               }
@@ -37,7 +48,7 @@ function App() {
               path="/recipes"
               element={
                 <ProtectedRoute>
-                  <Navbar />
+                  <ProfessionalTopbar />
                   <Recipes />
                 </ProtectedRoute>
               }
@@ -46,7 +57,7 @@ function App() {
               path="/categories"
               element={
                 <ProtectedRoute>
-                  <Navbar />
+                  <ProfessionalTopbar />
                   <Categories />
                 </ProtectedRoute>
               }
@@ -55,7 +66,7 @@ function App() {
               path="/favorites"
               element={
                 <ProtectedRoute>
-                  <Navbar />
+                  <ProfessionalTopbar />
                   <Favorites />
                 </ProtectedRoute>
               }
@@ -64,7 +75,7 @@ function App() {
               path="/saved-links"
               element={
                 <ProtectedRoute>
-                  <Navbar />
+                  <ProfessionalTopbar />
                   <SavedLinks />
                 </ProtectedRoute>
               }

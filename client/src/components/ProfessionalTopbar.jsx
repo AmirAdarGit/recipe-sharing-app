@@ -95,59 +95,63 @@ const ProfessionalTopbar = () => {
               <span className="logo__text">Recipe Share</span>
             </div>
 
-            {/* Desktop Navigation */}
-            <nav className="topbar__nav">
-              <a href="/recipes" className="nav__link">
-                <span className="nav__icon">📚</span>
-                <span className="nav__text">Recipes</span>
-              </a>
-              <a href="/categories" className="nav__link">
-                <span className="nav__icon">📖</span>
-                <span className="nav__text">Categories</span>
-              </a>
-              <a href="/favorites" className="nav__link nav__link--badge">
-                <span className="nav__icon">❤️</span>
-                <span className="nav__text">Favorites</span>
-                <span className="nav__badge">3</span>
-              </a>
-            </nav>
+            {/* Desktop Navigation - Only show for authenticated users */}
+            {user && (
+              <nav className="topbar__nav">
+                <a href="/recipes" className="nav__link">
+                  <span className="nav__icon">📚</span>
+                  <span className="nav__text">Recipes</span>
+                </a>
+                <a href="/categories" className="nav__link">
+                  <span className="nav__icon">📖</span>
+                  <span className="nav__text">Categories</span>
+                </a>
+                <a href="/favorites" className="nav__link nav__link--badge">
+                  <span className="nav__icon">❤️</span>
+                  <span className="nav__text">Favorites</span>
+                  <span className="nav__badge">3</span>
+                </a>
+              </nav>
+            )}
           </div>
 
-          {/* Center Section - Search */}
-          <div className="topbar__search">
-            <div className={`search__container ${isSearchFocused ? 'search__container--focused' : ''}`}>
-              <div className="search__icon">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Search recipes, ingredients..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setIsSearchFocused(true)}
-                onBlur={() => setIsSearchFocused(false)}
-                className="search__input"
-                aria-label="Search recipes and ingredients"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="search__clear"
-                  aria-label="Clear search"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          {/* Center Section - Search - Only show for authenticated users */}
+          {user && (
+            <div className="topbar__search">
+              <div className={`search__container ${isSearchFocused ? 'search__container--focused' : ''}`}>
+                <div className="search__icon">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
-                </button>
-              )}
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search recipes, ingredients..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
+                  className="search__input"
+                  aria-label="Search recipes and ingredients"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="search__clear"
+                    aria-label="Clear search"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Right Section - Actions */}
           <div className="topbar__actions">
-            
+
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
@@ -165,16 +169,34 @@ const ProfessionalTopbar = () => {
               </div>
             </button>
 
-            {/* Notifications */}
-            <button className="action__button action__button--notification" aria-label="View notifications">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM10.07 2.82l3.93 3.93-3.93 3.93M21 12H3" />
-              </svg>
-              <span className="notification__badge">2</span>
-            </button>
+            {/* Authenticated User Actions */}
+            {user && (
+              <>
+                {/* Notifications */}
+                <button className="action__button action__button--notification" aria-label="View notifications">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM10.07 2.82l3.93 3.93-3.93 3.93M21 12H3" />
+                  </svg>
+                  <span className="notification__badge">2</span>
+                </button>
+              </>
+            )}
 
-            {/* Profile Dropdown */}
-            <div className="profile__dropdown" ref={profileRef}>
+            {/* Unauthenticated User Actions */}
+            {!user && (
+              <div className="auth__buttons">
+                <a href="/login" className="auth__button auth__button--signin">
+                  Sign In
+                </a>
+                <a href="/signup" className="auth__button auth__button--signup">
+                  Sign Up
+                </a>
+              </div>
+            )}
+
+            {/* Profile Dropdown - Only show for authenticated users */}
+            {user && (
+              <div className="profile__dropdown" ref={profileRef}>
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
                 className="profile__trigger"
@@ -244,7 +266,8 @@ const ProfessionalTopbar = () => {
                   </div>
                 </div>
               )}
-            </div>
+              </div>
+            )}
 
             {/* Mobile Menu Toggle */}
             <button

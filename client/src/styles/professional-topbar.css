@@ -954,6 +954,84 @@
   }
 }
 
+/* Authentication Buttons for Unauthenticated Users */
+.auth__buttons {
+  /* Layout */
+  @apply flex items-center;
+
+  /* Spacing */
+  gap: var(--space-md);
+}
+
+.auth__button {
+  /* Layout & Sizing */
+  @apply px-4 py-2;
+
+  /* Typography */
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+
+  /* Border & Effects */
+  border-radius: var(--radius-lg);
+
+  /* Transitions */
+  transition: var(--transition-colors), transform var(--transition-fast), box-shadow var(--transition-fast);
+
+  /* Transform Origin */
+  transform-origin: center;
+}
+
+.auth__button--signin {
+  /* Colors */
+  color: var(--color-text-secondary);
+
+  /* Border */
+  border: 1px solid var(--color-border-primary);
+}
+
+.auth__button--signin:hover {
+  /* Colors */
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-tertiary);
+
+  /* Transform */
+  transform: scale(1.02);
+
+  /* Shadow */
+  box-shadow: var(--shadow-sm);
+}
+
+.auth__button--signup {
+  /* Colors */
+  background-color: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+}
+
+.auth__button--signup:hover {
+  /* Colors */
+  background-color: var(--color-accent-hover);
+
+  /* Transform */
+  transform: scale(1.02);
+
+  /* Shadow */
+  box-shadow: var(--shadow-md);
+}
+
+.auth__button:focus {
+  /* Outline */
+  @apply outline-none;
+
+  /* Shadow */
+  box-shadow: 0 0 0 2px var(--color-border-focus);
+}
+
+.auth__button:active {
+  /* Transform */
+  transform: scale(0.98);
+}
+
 /* Focus Visible for Better Keyboard Navigation */
 .topbar *:focus-visible {
   outline: 2px solid var(--color-border-focus);
