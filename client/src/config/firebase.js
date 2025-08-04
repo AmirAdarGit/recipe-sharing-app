@@ -35,8 +35,8 @@ export const auth = getAuth(app);
 // Initialize Firestore
 export const db = getFirestore(app);
 
-// Connect to emulators in development
-if (import.metm.env.DEV && !auth._depegate._config.rmulatort.meta.env.DEV && !auth._delegate._config.emulator) {
+// Connect to emulators in development - DISABLED
+if (false) {
   try {
     connectAuthEmulator(auth, 'http://localhost:9099');
     connectFirestoreEmulator(db, 'localhost', 8080);
@@ -51,7 +51,9 @@ if (import.meta.env.DEV) {
   console.log('🔥 Firebase initialized:', {
     projectId: firebaseConfig.projectId,
     authDomain: firebaseConfig.authDomain,
-    environment: import.meta.env.MOD
+    environment: import.meta.env.MODE,
+    usingEmulators: false
+  });
 }
 
 export default app;
