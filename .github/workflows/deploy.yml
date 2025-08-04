@@ -176,6 +176,21 @@ jobs:
       - name: Deploy to Railway
         run: |
           echo "🚀 Starting Railway deployment..."
+          echo "Setting up production environment variables..."
+
+          # Set MongoDB environment variable for production
+          railway variables set MONGODB_URI="${{ secrets.MONGODB_URI }}" || echo "Failed to set MONGODB_URI"
+          railway variables set NODE_ENV="production" || echo "Failed to set NODE_ENV"
+          railway variables set CORS_ORIGIN="${{ secrets.CORS_ORIGIN }}" || echo "Failed to set CORS_ORIGIN"
+
+          # Set Firebase environment variables for production
+          railway variables set FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID }}" || echo "Failed to set FIREBASE_PROJECT_ID"
+          railway variables set FIREBASE_PRIVATE_KEY_ID="${{ secrets.FIREBASE_PRIVATE_KEY_ID }}" || echo "Failed to set FIREBASE_PRIVATE_KEY_ID"
+          railway variables set FIREBASE_PRIVATE_KEY="${{ secrets.FIREBASE_PRIVATE_KEY }}" || echo "Failed to set FIREBASE_PRIVATE_KEY"
+          railway variables set FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL }}" || echo "Failed to set FIREBASE_CLIENT_EMAIL"
+          railway variables set FIREBASE_CLIENT_ID="${{ secrets.FIREBASE_CLIENT_ID }}" || echo "Failed to set FIREBASE_CLIENT_ID"
+
+          echo ""
           echo "Checking Railway authentication status..."
           railway whoami || echo "Not authenticated"
           echo ""
