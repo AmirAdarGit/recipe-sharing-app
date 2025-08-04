@@ -10,6 +10,7 @@ import Recipes from './pages/Recipes';
 import Categories from './pages/Categories';
 import Favorites from './pages/Favorites';
 import SavedLinks from './pages/SavedLinks';
+import DashboardDemo from './pages/DashboardDemo';
 import './App.css';
 
 function App() {
@@ -65,6 +66,14 @@ function App() {
                 <ProtectedRoute>
                   <Navbar />
                   <SavedLinks />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard-demo"
+              element={
+                <ProtectedRoute>
+                  <DashboardDemo />
                 </ProtectedRoute>
               }
             />
