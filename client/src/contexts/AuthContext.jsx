@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, memo } from 'react';
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -48,7 +48,7 @@ const syncUserWithBackend = async (firebaseUser) => {
 };
 
 // Auth Provider Component
-export const AuthProvider = ({ children }) => {
+const AuthProvider = memo(({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -192,4 +192,6 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
+});
+
+export { AuthProvider, useAuth };

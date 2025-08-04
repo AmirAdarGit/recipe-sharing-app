@@ -35,13 +35,15 @@ export const auth = getAuth(app);
 // Initialize Firestore
 export const db = getFirestore(app);
 
-// Connect to emulators in development - DISABLED
-if (false) {
+// Connect to emulators only if explicitly enabled
+const USE_EMULATORS = import.meta.env.VITE_USE_EMULATORS === 'true';
+
+if (import.meta.env.DEV && USE_EMULATORS) {
   try {
     connectAuthEmulator(auth, 'http://localhost:9099');
     connectFirestoreEmulator(db, 'localhost', 8080);
     console.log('🔧 Connected to Firebase emulators');
-  } catch (error) {
+  } catch (err) {
     console.log('⚠️ Firebase emulators not available, using production');
   }
 }
