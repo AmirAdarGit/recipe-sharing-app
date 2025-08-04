@@ -8,8 +8,11 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "dev": "nodemon src/index.js",
+    "dev": "npm run docker:start && nodemon src/index.js",
     "start": "node src/index.js",
+    "docker:start": "docker run -d --name recipe-sharing-app-local -p 27017:27017 mongo:latest || docker start recipe-sharing-app-local",
+    "docker:stop": "docker stop recipe-sharing-app-local",
+    "docker:clean": "docker stop recipe-sharing-app-local && docker rm recipe-sharing-app-local",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

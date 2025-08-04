@@ -4,28 +4,29 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // MongoDB connection configuration
-const MONGODB_URI = process.env.MONGODB_URI;
-const NODE_ENV = process.env.NODE_ENV || 'development';
+const MONGODB_URI = process.env.NODE_ENV === 'production' 
+  ? process.env.MONGODB_URI  // Atlas for production
+  : 'mongodb://localhost:27017/recipe-sharing-app'; // Local Docker for development
 
-// Connection options for MongoDB Atlas
-const connectionOptions = {
-  // Connection pool settings
-  maxPoolSize: 10, // Maintain up to 10 socket connections
-  serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-  // bufferMaxEntries: 0, // Disable mongoose buffering (deprecated in newer versions)
-  // bufferCommands: false, // Disable mongoose buffering (deprecated in newer versions)
-  
-  // Retry settings
+
+// Connection options
+const connectionOptions = process.env.NODE_ENV === 'production' ? {
+  // Production (Atlas) options
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
   retryWrites: true,
   retryReads: true,
-  
-  // Atlas specific settings
   ssl: true,
   authSource: 'admin',
-  
-  // Application name for monitoring
   appName: 'RecipeSharingApp'
+} : {
+  // Development (Local Docker) options
+  maxPoolSize: 5,
+  serverSelectionTimeoutMS: 3000,
+  socketTimeoutMS: 30000,
+  retryWrites: true,
+  retryReads: true
 };
 
 // Connection state tracking
@@ -34,30 +35,29 @@ let connectionAttempts = 0;
 const MAX_RETRY_ATTEMPTS = 5;
 const RETRY_DELAY = 5000; // 5 seconds
 
-// Database connection function with retry logic
+// Database connection function with environment-specific logic
 export const connectToDatabase = async () => {
-  // If already connected, return early
   if (isConnected) {
-    console.log('📊 Already connected to MongoDB Atlas');
+    console.log('📊 Already connected to MongoDB');
     return mongoose.connection;
   }
 
-  // Validate MongoDB URI
-  if (!MONGODB_URI) {
-    throw new Error('MONGODB_URI environment variable is not defined');
+  // Validate MongoDB URI for production
+  if (process.env.NODE_ENV === 'production' && !process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI environment variable is required for production');
   }
 
   try {
-    console.log('🔄 Connecting to MongoDB Atlas...');
-    console.log(`📍 Environment: ${NODE_ENV}`);
+    console.log('🔄 Connecting to MongoDB...');
+    console.log(`📍 Environment: ${process.env.NODE_ENV}`);
+    console.log(`🎯 Database: ${process.env.NODE_ENV === 'production' ? 'MongoDB Atlas' : 'Local Docker'}`);
     
-    // Connect to MongoDB Atlas
     await mongoose.connect(MONGODB_URI, connectionOptions);
     
     isConnected = true;
     connectionAttempts = 0;
     
-    console.log('✅ Successfully connected to MongoDB Atlas');
+    console.log('✅ Successfully connected to MongoDB');
     console.log(`📊 Database: ${mongoose.connection.name}`);
     console.log(`🌐 Host: ${mongoose.connection.host}`);
     
@@ -67,7 +67,6 @@ export const connectToDatabase = async () => {
     connectionAttempts++;
     console.error(`❌ MongoDB connection failed (attempt ${connectionAttempts}/${MAX_RETRY_ATTEMPTS}):`, error.message);
     
-    // Retry logic
     if (connectionAttempts < MAX_RETRY_ATTEMPTS) {
       console.log(`🔄 Retrying connection in ${RETRY_DELAY / 1000} seconds...`);
       await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));

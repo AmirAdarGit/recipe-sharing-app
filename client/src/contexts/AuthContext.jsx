@@ -11,6 +11,8 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
+import { API_BASE_URL } from '../config/api.js';
+import axios from 'axios';
 
 // Create Auth Context
 const AuthContext = createContext({});
@@ -22,6 +24,27 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+};
+
+// Add this function inside AuthContext component
+const syncUserWithBackend = async (firebaseUser) => {
+  try {
+    const userData = {
+      firebaseUid: firebaseUser.uid,
+      email: firebaseUser.email,
+      displayName: firebaseUser.displayName,
+      photoURL: firebaseUser.photoURL,
+      emailVerified: firebaseUser.emailVerified,
+      providerData: firebaseUser.providerData
+    };
+
+    const response = await axios.post(`${API_BASE_URL}/api/users`, userData);
+    console.log('✅ User synced with backend:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Failed to sync user with backend:', error);
+    throw error;
+  }
 };
 
 // Auth Provider Component
@@ -130,9 +153,18 @@ export const AuthProvider = ({ children }) => {
 
   // Listen for auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       setLoading(false);
+      
+      if (user) {
+        // Sync user with backend when signed in
+        try {
+          await syncUserWithBackend(user);
+        } catch (error) {
+          console.error('Backend sync failed:', error);
+        }
+      }
       
       if (import.meta.env.DEV) {
         console.log('🔐 Auth state changed:', user ? `Signed in as ${user.email}` : 'Signed out');
