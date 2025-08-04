@@ -6,29 +6,29 @@ import '../styles/professional-topbar.css';
 
 const DashboardDemo = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen theme-bg-page">
       <ProfessionalTopbar />
-      
+
       {/* Demo Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl font-bold theme-text-primary mb-4">
             Professional Topbar Demo
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="theme-text-secondary text-lg">
             This page demonstrates the professional topbar component with sophisticated theme system and premium design standards.
           </p>
         </div>
 
         {/* Professional Topbar Features */}
-        <div className="mb-12 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+        <div className="mb-12 theme-card p-6 rounded-lg">
+          <h2 className="text-2xl font-semibold theme-text-primary mb-4">
             🎨 Professional Topbar Features
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Theme System</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h3 className="text-lg font-medium theme-text-primary mb-2">Theme System</h3>
+              <ul className="text-sm theme-text-secondary space-y-1">
                 <li>• Sophisticated dark/light mode toggle</li>
                 <li>• CSS custom properties for easy theming</li>
                 <li>• Smooth theme transitions (300ms)</li>
@@ -37,8 +37,8 @@ const DashboardDemo = () => {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Design Standards</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h3 className="text-lg font-medium theme-text-primary mb-2">Design Standards</h3>
+              <ul className="text-sm theme-text-secondary space-y-1">
                 <li>• Glass-morphism backdrop blur effect</li>
                 <li>• Professional color schemes</li>
                 <li>• Perfect contrast ratios (WCAG AA)</li>
@@ -47,8 +47,8 @@ const DashboardDemo = () => {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Interactive Features</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h3 className="text-lg font-medium theme-text-primary mb-2">Interactive Features</h3>
+              <ul className="text-sm theme-text-secondary space-y-1">
                 <li>• Smooth hover effects on all elements</li>
                 <li>• Animated theme toggle (sun/moon)</li>
                 <li>• Proper focus states for a11y</li>
@@ -57,8 +57,8 @@ const DashboardDemo = () => {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Technical Excellence</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h3 className="text-lg font-medium theme-text-primary mb-2">Technical Excellence</h3>
+              <ul className="text-sm theme-text-secondary space-y-1">
                 <li>• Semantic HTML structure</li>
                 <li>• ARIA labels for accessibility</li>
                 <li>• Fixed positioning (z-index: 1000)</li>

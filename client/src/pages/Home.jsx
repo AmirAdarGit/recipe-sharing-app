@@ -13,13 +13,13 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-900">
+    <div className="min-h-screen theme-bg-page">
         {/* Hero / Welcome Section */}
-        <div className="bg-zinc-900 text-white p-6 rounded-xl shadow mb-8 text-center">
+        <div className="theme-bg-primary theme-text-primary p-6 rounded-xl theme-shadow mb-8 text-center">
           <h1 className="text-3xl font-bold mb-2">
             {getGreeting()}, {user?.displayName || user?.email?.split('@')[0] || 'Guest'}! 👋
           </h1>
-          <p className="text-gray-300 mb-2">{user?.email}</p>
+          <p className="theme-text-secondary mb-2">{user?.email}</p>
 
           {!user?.emailVerified && (
             <div className="mt-4 bg-yellow-900 border border-yellow-700 rounded-md p-4 max-w-md mx-auto">

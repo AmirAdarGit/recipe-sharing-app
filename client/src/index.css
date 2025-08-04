@@ -2,8 +2,177 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global Theme System - CSS Custom Properties */
+:root {
+  /* Light Theme Colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8fafc;
+  --color-bg-tertiary: #f1f5f9;
+  --color-bg-overlay: rgba(255, 255, 255, 0.8);
+  --color-bg-page: #f9fafb;
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748b;
+  --color-text-inverse: #ffffff;
+
+  --color-border-primary: #e2e8f0;
+  --color-border-secondary: #cbd5e1;
+  --color-border-focus: #3b82f6;
+
+  --color-accent-primary: #3b82f6;
+  --color-accent-hover: #2563eb;
+  --color-accent-light: #dbeafe;
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Backdrop Blur */
+  --backdrop-blur: blur(12px);
+  --backdrop-saturate: saturate(180%);
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.25rem;
+  --space-2xl: 1.5rem;
+  --space-3xl: 2rem;
+
+  /* Typography */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 250ms ease-out;
+  --transition-slow: 350ms ease-out;
+  --transition-colors: color 300ms ease-out, background-color 300ms ease-out, border-color 300ms ease-out;
+
+  /* Z-index */
+  --z-dropdown: 50;
+  --z-modal: 100;
+  --z-topbar: 1000;
+}
+
+/* Dark Theme Colors */
+[data-theme="dark"], .dark {
+  --color-bg-primary: #0f172a;
+  --color-bg-secondary: #1e293b;
+  --color-bg-tertiary: #334155;
+  --color-bg-overlay: rgba(15, 23, 42, 0.8);
+  --color-bg-page: #020617;
+
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
+  --color-text-inverse: #0f172a;
+
+  --color-border-primary: #334155;
+  --color-border-secondary: #475569;
+  --color-border-focus: #60a5fa;
+
+  --color-accent-primary: #60a5fa;
+  --color-accent-hover: #3b82f6;
+  --color-accent-light: #1e3a8a;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+}
+
+/* Global Theme Application */
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+
+  /* Apply theme colors */
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+
+  /* Smooth transitions */
+  transition: var(--transition-colors);
+}
+
+/* Global theme-aware styles */
+.theme-bg-primary {
+  background-color: var(--color-bg-primary);
+  transition: var(--transition-colors);
+}
+
+.theme-bg-secondary {
+  background-color: var(--color-bg-secondary);
+  transition: var(--transition-colors);
+}
+
+.theme-bg-tertiary {
+  background-color: var(--color-bg-tertiary);
+  transition: var(--transition-colors);
+}
+
+.theme-text-primary {
+  color: var(--color-text-primary);
+  transition: var(--transition-colors);
+}
+
+.theme-text-secondary {
+  color: var(--color-text-secondary);
+  transition: var(--transition-colors);
+}
+
+.theme-text-tertiary {
+  color: var(--color-text-tertiary);
+  transition: var(--transition-colors);
+}
+
+.theme-border-primary {
+  border-color: var(--color-border-primary);
+  transition: var(--transition-colors);
+}
+
+.theme-shadow {
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-colors);
+}
+
+.theme-card {
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-colors);
+}
+
+.theme-button {
+  background-color: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  transition: var(--transition-colors);
+}
+
+.theme-button:hover {
+  background-color: var(--color-accent-hover);
 }
