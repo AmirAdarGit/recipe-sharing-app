@@ -60,3 +60,6 @@ Thumbs.db
 
 # Railway
 .railway
+
+# Local Netlify folder
+.netlify
