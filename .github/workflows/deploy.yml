@@ -82,16 +82,26 @@ jobs:
 
       - name: Deploy to Railway
         run: |
-          # Install Railway CLI
-          npm install -g @railway/cli@latest
-          
           echo "🚀 Starting Railway deployment..."
           echo "📋 Railway CLI version:"
           railway --version
           
-          # Deploy to Railway using 'up' command with service specification
-          echo "🚀 Deploying to Railway service..."
-          railway up --service=backend
+          # Authenticate first
+          echo "$RAILWAY_TOKEN" | railway login --token
+          
+          # Link to project and environment
+          echo "� Linking to Railway project..."
+          railway link --project $RAILWAY_PROJECT_ID --environment $RAILWAY_ENVIRONMENT_ID
+          
+          # Check status
+          echo "� Railway status:"
+          railway status
+          
+          # Deploy using 'up' command instead of specifying service
+          echo "🚀 Deploying to Railway..."
+          railway up --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
         working-directory: ./server
