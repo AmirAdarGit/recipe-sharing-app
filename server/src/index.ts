@@ -2,8 +2,8 @@ import express, { Request, Response, Application } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectToDatabase, isConnectedToDatabase } from './config/database.js';
-import userRoutes from './routes/users';
-import recipeRoutes from './routes/recipes';
+import userRoutes from './routes/users.js';
+import recipeRoutes from './routes/recipes.js';
 import type { ApiResponse } from './types/index.js';
 
 // Load environment variables
