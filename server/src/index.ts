@@ -9,7 +9,7 @@ import type { ApiResponse } from './types/index.js';
 // Load environment variables
 dotenv.config();
 
-// Force Railway rebuild - API routes fix
+// Force Railway rebuild - API routes fix v2
 
 const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || '5000');
@@ -78,7 +78,20 @@ app.get('/api/test', (_req: Request, res: Response<ApiResponse>) => {
   res.json({
     success: true,
     message: 'Test route working!',
-    data: { typescript: true }
+    data: { typescript: true, version: '1.0.2' }
+  });
+});
+
+// Debug route to check route registration
+app.get('/api/debug', (_req: Request, res: Response) => {
+  res.json({
+    success: true,
+    message: 'Debug route working!',
+    routes: {
+      userRoutes: typeof userRoutes,
+      recipeRoutes: typeof recipeRoutes
+    },
+    timestamp: new Date().toISOString()
   });
 });
 
