@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [ main ]
 
+# Add permissions for the workflow
+permissions:
+  contents: read
+  deployments: write
+  statuses: write
+  pull-requests: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -56,17 +63,27 @@ jobs:
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
+        id: netlify-deploy
         with:
           publish-dir: './client/dist'
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"
           enable-pull-request-comment: false
-          enable-commit-comment: true
-          overwrites-pull-request-comment: true
+          enable-commit-comment: false
+          enable-commit-status: false
+          enable-github-deployment: false
+          overwrites-pull-request-comment: false
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Display Deployment Info
+        run: |
+          echo "🎉 Frontend deployed successfully!"
+          echo "🌐 Production URL: https://sharacipe.netlify.app"
+          echo "📦 Deploy URL: ${{ steps.netlify-deploy.outputs.deploy-url }}"
+          echo "✅ Deployment completed at $(date)"
 
   deploy-backend:
     needs: test
