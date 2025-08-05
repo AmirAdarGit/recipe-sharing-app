@@ -102,58 +102,27 @@ jobs:
             echo "❌ RAILWAY_PROJECT_ID is not set"
             exit 1
           fi
-          if [ -z "$RAILWAY_ENVIRONMENT_ID" ]; then
-            echo "❌ RAILWAY_ENVIRONMENT_ID is not set"
-            exit 1
-          fi
           echo "✅ All Railway secrets are configured"
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
-
-      - name: Set Railway Environment Variables
-        run: |
-          echo "🔧 Setting up production environment variables..."
-          
-          # Link to the correct service first
-          railway link --project $RAILWAY_PROJECT_ID --environment $RAILWAY_ENVIRONMENT_ID
-          
-          # Set MongoDB environment variable for production
-          echo "Setting MONGODB_URI..."
-          railway variables --set MONGODB_URI="${{ secrets.MONGODB_URI }}"
-          
-          echo "Setting NODE_ENV..."
-          railway variables --set NODE_ENV="production"
-          
-          echo "Setting CORS_ORIGIN..."
-          railway variables --set CORS_ORIGIN="${{ secrets.CORS_ORIGIN }}"
-
-          # Set Firebase environment variables for production
-          echo "Setting Firebase environment variables..."
-          railway variables --set FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID }}"
-          railway variables --set FIREBASE_PRIVATE_KEY_ID="${{ secrets.FIREBASE_PRIVATE_KEY_ID }}"
-          railway variables --set FIREBASE_PRIVATE_KEY="${{ secrets.FIREBASE_PRIVATE_KEY }}"
-          railway variables --set FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL }}"
-          railway variables --set FIREBASE_CLIENT_ID="${{ secrets.FIREBASE_CLIENT_ID }}"
-          
-          echo "✅ All environment variables set successfully"
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
-        working-directory: ./server
 
       - name: Deploy to Railway
         run: |
           echo "🚀 Starting Railway deployment..."
           
-          # Authenticate and deploy directly
-          echo "$RAILWAY_TOKEN" | railway login --token
-          railway link --project $RAILWAY_PROJECT_ID --environment $RAILWAY_ENVIRONMENT_ID
-          railway deploy --detach
+          # Link to the project
+          echo "🔗 Linking to Railway project..."
+          railway link --project $RAILWAY_PROJECT_ID
+          
+          # Verify connection
+          echo "📋 Verifying Railway connection..."
+          railway status
+          
+          # Deploy to Railway
+          echo "🚀 Deploying to Railway..."
+          railway deploy
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
         working-directory: ./server
