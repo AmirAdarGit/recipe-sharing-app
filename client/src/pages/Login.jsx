@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { showWarningToast, VALIDATION_TOASTS } from '../utils/toast';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -67,14 +68,18 @@ const Login = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
-    
+
+    if (!validateForm()) {
+      showWarningToast(VALIDATION_TOASTS.REQUIRED_FIELDS);
+      return;
+    }
+
     setIsLoading(true);
     try {
       await signIn(formData.email, formData.password);
     } catch (error) {
       console.error('Login error:', error);
+      // Error toast is handled in AuthContext
     } finally {
       setIsLoading(false);
     }

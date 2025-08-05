@@ -1,5 +1,6 @@
 // React Router and Authentication App
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProfessionalTopbar from './components/ProfessionalTopbar';
@@ -11,8 +12,10 @@ import Categories from './pages/Categories';
 import Favorites from './pages/Favorites';
 import SavedLinks from './pages/SavedLinks';
 import DashboardDemo from './pages/DashboardDemo';
+import ToastDemo from './components/ToastDemo';
 import './App.css';
 import './styles/professional-topbar.css';
+import './styles/toast.css';
 
 function App() {
   return (
@@ -89,9 +92,38 @@ function App() {
               }
             />
 
+            {/* Toast Demo - For testing notifications */}
+            <Route
+              path="/toast-demo"
+              element={
+                <ProtectedRoute>
+                  <ProfessionalTopbar />
+                  <ToastDemo />
+                </ProtectedRoute>
+              }
+            />
+
             {/* Catch all route - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+
+          {/* Toast Notification Container */}
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            limit={3}
+            toastClassName="custom-toast"
+            bodyClassName="custom-toast-body"
+            progressClassName="custom-toast-progress"
+          />
         </div>
       </Router>
     </AuthProvider>

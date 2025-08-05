@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { showWarningToast, VALIDATION_TOASTS } from '../utils/toast';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -80,22 +81,35 @@ const SignUp = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
-    
+
+    if (!validateForm()) {
+      // Show specific validation error toasts
+      if (!formData.email) {
+        showWarningToast(VALIDATION_TOASTS.INVALID_EMAIL);
+      } else if (formData.password.length < 6) {
+        showWarningToast(VALIDATION_TOASTS.WEAK_PASSWORD);
+      } else if (formData.password !== formData.confirmPassword) {
+        showWarningToast(VALIDATION_TOASTS.PASSWORD_MISMATCH);
+      } else {
+        showWarningToast(VALIDATION_TOASTS.REQUIRED_FIELDS);
+      }
+      return;
+    }
+
     setIsLoading(true);
     try {
       await signUp(formData.email, formData.password, formData.name.trim());
       setShowSuccess(true);
-      
+
       // Redirect to login after 3 seconds
       setTimeout(() => {
-        navigate('/login', { 
+        navigate('/login', {
           state: { message: 'Account created! Please check your email to verify your account.' }
         });
       }, 3000);
     } catch (error) {
       console.error('Sign up error:', error);
+      // Error toast is handled in AuthContext
     } finally {
       setIsLoading(false);
     }
