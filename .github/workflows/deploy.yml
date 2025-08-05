@@ -116,6 +116,9 @@ jobs:
         run: |
           echo "🔧 Setting up production environment variables..."
           
+          # Link to the correct service first
+          railway link --project $RAILWAY_PROJECT_ID --environment $RAILWAY_ENVIRONMENT_ID
+          
           # Set MongoDB environment variable for production
           echo "Setting MONGODB_URI..."
           railway variables --set MONGODB_URI="${{ secrets.MONGODB_URI }}"
