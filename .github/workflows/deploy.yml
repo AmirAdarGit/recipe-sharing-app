@@ -167,7 +167,7 @@ jobs:
           # Set MongoDB environment variable for production
           railway variables set MONGODB_URI="${{ secrets.MONGODB_URI }}" || echo "Failed to set MONGODB_URI"
           railway variables set NODE_ENV="production" || echo "Failed to set NODE_ENV"
-          railway variables set CORS_ORIGIN="${{ secrets.CORS_ORIGIN }}" || echo "Failed to set CORS_ORIGIN"
+          railway variables set CORS_ORIGIN="http://localhost:5173,https://sharacipe.netlify.app" || echo "Failed to set CORS_ORIGIN"
 
           # Set Firebase environment variables for production
           railway variables set FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID }}" || echo "Failed to set FIREBASE_PROJECT_ID"

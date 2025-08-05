@@ -17,7 +17,9 @@ const HOST: string = process.env.HOST || '0.0.0.0';
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:5173'],
+  origin: process.env.CORS_ORIGIN ? 
+    process.env.CORS_ORIGIN.split(',') : 
+    ['http://localhost:5173', 'https://sharacipe.netlify.app'],
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -133,7 +135,8 @@ const startServer = async (): Promise<void> => {
       console.log(`🚀 TypeScript Server running on http://${HOST}:${PORT}`);
       console.log(`📊 Database: ${isConnectedToDatabase() ? 'Connected' : 'Disconnected'}`);
       console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
-      console.log(`🔗 CORS Origins: ${process.env.CORS_ORIGIN || 'http://localhost:5173'}`);
+      console.log(`🔗 CORS Origins: ${process.env.CORS_ORIGIN || 'http://localhost:5173,https://sharacipe.netlify.app'}`);
+      console.log(`🔗 Parsed CORS Origins:`, corsOptions.origin);
       console.log(`📝 TypeScript: Enabled ✅`);
     });
     
