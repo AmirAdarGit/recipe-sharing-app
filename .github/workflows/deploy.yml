@@ -21,7 +21,7 @@ jobs:
       
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '22'
           cache: 'npm'
           
       - name: Install dependencies
@@ -43,7 +43,7 @@ jobs:
       
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '22'
           cache: 'npm'
           
       - name: Install and Build
@@ -63,7 +63,6 @@ jobs:
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
-        id: netlify-deploy
         with:
           publish-dir: './client/dist'
           production-branch: main
@@ -78,13 +77,6 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-      - name: Display Deployment Info
-        run: |
-          echo "🎉 Frontend deployed successfully!"
-          echo "🌐 Production URL: https://sharacipe.netlify.app"
-          echo "📦 Deploy URL: ${{ steps.netlify-deploy.outputs.deploy-url }}"
-          echo "✅ Deployment completed at $(date)"
-
   deploy-backend:
     needs: test
     runs-on: ubuntu-latest
@@ -94,7 +86,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '22'
 
       - name: Install Railway CLI
         run: npm install -g @railway/cli@latest
