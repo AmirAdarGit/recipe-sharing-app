@@ -9,6 +9,8 @@ import type { ApiResponse } from './types/index.js';
 // Load environment variables
 dotenv.config();
 
+// Force Railway rebuild - API routes fix
+
 const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || '5000');
 const HOST: string = process.env.HOST || '0.0.0.0';
