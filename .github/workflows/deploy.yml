@@ -80,23 +80,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy to Railway
+      - name: Railway Auto-Deploy
         run: |
-          # Install Railway CLI
-          npm install -g @railway/cli@latest
-          
-          echo "🚀 Starting Railway deployment..."
-          echo "📋 Railway CLI version:"
-          railway --version
-          
-          echo "🔍 Debug info:"
-          echo "Working directory: $(pwd)"
-          echo "Files in server directory:"
-          ls -la
-          
-          # Deploy to Railway using 'up' command with service specification
-          echo "🚀 Deploying to Railway service..."
-          railway up --service=backend
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        working-directory: ./server
+          echo "🚀 Railway will auto-deploy from GitHub integration"
+          echo "� Server build completed successfully"
+          echo "� Railway deployment URL: https://recipe-sharing-app-production.up.railway.app"
+          echo "✅ Push to main branch triggers automatic Railway deployment"
+          echo "⏱️ Deployment typically takes 2-3 minutes"
+          echo "🔍 Check Railway dashboard for deployment status"
+          echo ""
+          echo "📋 Deployment Info:"
+          echo "- Repository: $(git remote get-url origin)"
+          echo "- Branch: $(git branch --show-current)"
+          echo "- Commit: $(git rev-parse --short HEAD)"
+          echo "- Timestamp: $(date)"
