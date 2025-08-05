@@ -2,8 +2,8 @@ import express, { Request, Response, Application } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectToDatabase, isConnectedToDatabase } from './config/database.js';
-import userRoutes from './routes/users.js';
-import recipeRoutes from './routes/recipes.js';
+import userRoutes from './routes/users';
+import recipeRoutes from './routes/recipes';
 import type { ApiResponse } from './types/index.js';
 
 // Load environment variables
@@ -71,9 +71,22 @@ app.get('/api/db-status', (_req: Request, res: Response<ApiResponse>) => {
   });
 });
 
+// Test route
+app.get('/api/test', (_req: Request, res: Response<ApiResponse>) => {
+  res.json({
+    success: true,
+    message: 'Test route working!',
+    data: { typescript: true }
+  });
+});
+
 // API Routes
+console.log('🛣️ Registering API routes...');
+console.log('📝 userRoutes type:', typeof userRoutes);
+console.log('📝 recipeRoutes type:', typeof recipeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/recipes', recipeRoutes);
+console.log('✅ API routes registered successfully');
 
 // 404 handler - catch all unmatched routes
 app.use((req: Request, res: Response<ApiResponse>) => {
