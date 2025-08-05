@@ -89,9 +89,13 @@ jobs:
           echo "📋 Railway CLI version:"
           railway --version
           
-          # Try to deploy without specifying service (Railway should auto-detect)
+          # Check available deploy options
+          echo "📋 Available deploy options:"
+          railway deploy --help
+          
+          # Deploy to Railway (without --detach flag)
           echo "🚀 Deploying to Railway..."
-          railway deploy --detach
+          railway deploy
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         working-directory: ./server
