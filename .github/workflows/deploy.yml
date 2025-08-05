@@ -148,13 +148,10 @@ jobs:
         run: |
           echo "🚀 Starting Railway deployment..."
           
-          # Get the service name first
-          echo "📋 Getting Railway service information..."
-          railway status
-          
-          # Deploy to Railway (specify service if multiple exist)
-          echo "🚀 Deploying to Railway..."
-          railway deploy --service backend
+          # Authenticate and deploy directly
+          echo "$RAILWAY_TOKEN" | railway login --token
+          railway link --project $RAILWAY_PROJECT_ID --environment $RAILWAY_ENVIRONMENT_ID
+          railway deploy --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
