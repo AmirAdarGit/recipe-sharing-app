@@ -89,13 +89,9 @@ jobs:
           echo "📋 Railway CLI version:"
           railway --version
           
-          # Check available deploy options
-          echo "📋 Available deploy options:"
-          railway deploy --help
-          
-          # Deploy to Railway (without --detach flag)
+          # Deploy to Railway using 'up' command
           echo "🚀 Deploying to Railway..."
-          railway deploy
+          railway up
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         working-directory: ./server
