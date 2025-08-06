@@ -1,44 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { showWarningToast, VALIDATION_TOASTS } from '../utils/toast';
 
-const SignUp = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [validationErrors, setValidationErrors] = useState({});
-  const [showSuccess, setShowSuccess] = useState(false);
+interface FormData {
+  email: string;
+  password: string;
+}
 
-  const { signUp, signInWithGoogle, signInWithFacebook, user, error, clearError } = useAuth();
+interface ValidationErrors {
+  email?: string;
+  password?: string;
+}
+
+const Login: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    email: '',
+    password: ''
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
+
+  const { login, loginWithGoogle, loginWithFacebook, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Redirect if already authenticated
   useEffect(() => {
     if (user) {
-      navigate('/', { replace: true });
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
     }
-  }, [user, navigate]);
-
-  // Clear errors when component mounts
-  useEffect(() => {
-    clearError();
-  }, [clearError]);
+  }, [user, navigate, location]);
 
   // Handle input changes
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-    
+
     // Clear validation error for this field
-    if (validationErrors[name]) {
+    if (validationErrors[name as keyof ValidationErrors]) {
       setValidationErrors(prev => ({
         ...prev,
         [name]: ''
@@ -47,137 +51,83 @@ const SignUp = () => {
   };
 
   // Validate form
-  const validateForm = () => {
-    const errors = {};
-    
-    if (!formData.name.trim()) {
-      errors.name = 'Name is required';
-    } else if (formData.name.trim().length < 2) {
-      errors.name = 'Name must be at least 2 characters';
-    }
-    
+  const validateForm = (): boolean => {
+    const errors: ValidationErrors = {};
+
     if (!formData.email) {
       errors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = 'Email is invalid';
     }
-    
+
     if (!formData.password) {
       errors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       errors.password = 'Password must be at least 6 characters';
     }
-    
-    if (!formData.confirmPassword) {
-      errors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
-    
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
     if (!validateForm()) {
-      // Show specific validation error toasts
-      if (!formData.email) {
-        showWarningToast(VALIDATION_TOASTS.INVALID_EMAIL);
-      } else if (formData.password.length < 6) {
-        showWarningToast(VALIDATION_TOASTS.WEAK_PASSWORD);
-      } else if (formData.password !== formData.confirmPassword) {
-        showWarningToast(VALIDATION_TOASTS.PASSWORD_MISMATCH);
-      } else {
-        showWarningToast(VALIDATION_TOASTS.REQUIRED_FIELDS);
-      }
+      showWarningToast(VALIDATION_TOASTS.REQUIRED_FIELDS);
       return;
     }
 
     setIsLoading(true);
     try {
-      await signUp(formData.email, formData.password, formData.name.trim());
-      setShowSuccess(true);
-
-      // Redirect to login after 3 seconds
-      setTimeout(() => {
-        navigate('/login', {
-          state: { message: 'Account created! Please check your email to verify your account.' }
-        });
-      }, 3000);
+      await login(formData.email, formData.password);
     } catch (error) {
-      console.error('Sign up error:', error);
+      console.error('Login error:', error);
       // Error toast is handled in AuthContext
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle Google sign up
-  const handleGoogleSignUp = async () => {
+  // Handle Google sign in
+  const handleGoogleSignIn = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      await signInWithGoogle();
+      await loginWithGoogle();
     } catch (error) {
-      console.error('Google sign up error:', error);
+      console.error('Google sign in error:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle Facebook sign up
-  const handleFacebookSignUp = async () => {
+  // Handle Facebook sign in
+  const handleFacebookSignIn = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      await signInWithFacebook();
+      await loginWithFacebook();
     } catch (error) {
-      console.error('Facebook sign up error:', error);
+      console.error('Facebook sign in error:', error);
     } finally {
       setIsLoading(false);
     }
   };
-
-  if (showSuccess) {
-    return (
-      <div className="min-h-screen flex items-center justify-center theme-bg-page pt-16 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-              <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold theme-text-primary">
-              Account Created Successfully!
-            </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
-              Please check your email to verify your account.
-            </p>
-            <p className="mt-4 text-center text-sm text-gray-500">
-              Redirecting to login page...
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center theme-bg-page pt-16 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold theme-text-primary">
-            Create your account
+            Sign in to Recipe Sharing
           </h2>
           <p className="mt-2 text-center text-sm theme-text-secondary">
             Or{' '}
             <Link
-              to="/login"
+              to="/signup"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              sign in to your existing account
+              create a new account
             </Link>
           </p>
         </div>
@@ -191,29 +141,7 @@ const SignUp = () => {
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Full Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                autoComplete="name"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  validationErrors.name ? 'border-red-300' : 'border-gray-300'
-                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
-                placeholder="Enter your full name"
-              />
-              {validationErrors.name && (
-                <p className="mt-1 text-sm text-red-600">{validationErrors.name}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium theme-text-primary">
                 Email address
               </label>
               <input
@@ -225,8 +153,8 @@ const SignUp = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  validationErrors.email ? 'border-red-300' : 'border-gray-300'
-                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  validationErrors.email ? 'border-red-300' : 'theme-border-primary'
+                } placeholder-gray-500 theme-text-primary theme-bg-primary rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                 placeholder="Enter your email"
               />
               {validationErrors.email && (
@@ -235,46 +163,24 @@ const SignUp = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium theme-text-primary">
                 Password
               </label>
               <input
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="new-password"
+                autoComplete="current-password"
                 required
                 value={formData.password}
                 onChange={handleChange}
                 className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
                   validationErrors.password ? 'border-red-300' : 'border-gray-300'
                 } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
-                placeholder="Create a password"
+                placeholder="Enter your password"
               />
               {validationErrors.password && (
                 <p className="mt-1 text-sm text-red-600">{validationErrors.password}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirm Password
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  validationErrors.confirmPassword ? 'border-red-300' : 'border-gray-300'
-                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
-                placeholder="Confirm your password"
-              />
-              {validationErrors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-600">{validationErrors.confirmPassword}</p>
               )}
             </div>
           </div>
@@ -285,7 +191,7 @@ const SignUp = () => {
               disabled={isLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Creating account...' : 'Create account'}
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
 
@@ -302,7 +208,7 @@ const SignUp = () => {
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={handleGoogleSignUp}
+                onClick={handleGoogleSignIn}
                 disabled={isLoading}
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -317,7 +223,7 @@ const SignUp = () => {
 
               <button
                 type="button"
-                onClick={handleFacebookSignUp}
+                onClick={handleFacebookSignIn}
                 disabled={isLoading}
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -334,4 +240,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;

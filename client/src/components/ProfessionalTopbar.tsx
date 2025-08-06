@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
-const ProfessionalTopbar = () => {
+const ProfessionalTopbar: React.FC = () => {
   const { user, logout } = useAuth();
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  const profileRef = useRef(null);
-  const mobileMenuRef = useRef(null);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const profileRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   // Theme initialization and persistence
   useEffect(() => {
@@ -23,7 +23,7 @@ const ProfessionalTopbar = () => {
   }, []);
 
   // Update theme in DOM
-  const updateTheme = (dark) => {
+  const updateTheme = (dark: boolean): void => {
     const root = document.documentElement;
     if (dark) {
       root.classList.add('dark');
@@ -35,7 +35,7 @@ const ProfessionalTopbar = () => {
   };
 
   // Theme toggle handler
-  const toggleTheme = () => {
+  const toggleTheme = (): void => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
     updateTheme(newTheme);
@@ -44,11 +44,12 @@ const ProfessionalTopbar = () => {
 
   // Close dropdowns when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent): void => {
+      const target = event.target as Node;
+      if (profileRef.current && !profileRef.current.contains(target)) {
         setIsProfileOpen(false);
       }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(target)) {
         setIsMobileMenuOpen(false);
       }
     };
@@ -58,7 +59,7 @@ const ProfessionalTopbar = () => {
   }, []);
 
   // Handle logout
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     try {
       await logout();
       setIsProfileOpen(false);
@@ -68,7 +69,7 @@ const ProfessionalTopbar = () => {
   };
 
   // Get time-based greeting
-  const getGreeting = () => {
+  const getGreeting = (): string => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
     if (hour < 18) return 'Good afternoon';
@@ -99,8 +100,12 @@ const ProfessionalTopbar = () => {
             {user && (
               <nav className="topbar__nav">
                 <a href="/recipes" className="nav__link">
+                  <span className="nav__icon">🌍</span>
+                  <span className="nav__text">Browse</span>
+                </a>
+                <a href="/my-recipes" className="nav__link">
                   <span className="nav__icon">📚</span>
-                  <span className="nav__text">Recipes</span>
+                  <span className="nav__text">My Recipes</span>
                 </a>
                 <a href="/categories" className="nav__link">
                   <span className="nav__icon">📖</span>
@@ -292,8 +297,12 @@ const ProfessionalTopbar = () => {
           <div className="mobile__menu-content">
             <nav className="mobile__nav">
               <a href="/recipes" className="mobile__link">
+                <span className="mobile__icon">🌍</span>
+                <span>Browse</span>
+              </a>
+              <a href="/my-recipes" className="mobile__link">
                 <span className="mobile__icon">📚</span>
-                <span>Recipes</span>
+                <span>My Recipes</span>
               </a>
               <a href="/categories" className="mobile__link">
                 <span className="mobile__icon">📖</span>

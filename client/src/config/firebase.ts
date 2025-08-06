@@ -1,10 +1,22 @@
 // Firebase configuration and initialization
-import { initializeApp } from 'firebase/app';
-import { getAuth, connectAuthEmulator } from 'firebase/auth';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { getAuth, connectAuthEmulator, Auth } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator, Firestore } from 'firebase/firestore';
+import { getStorage, Storage } from 'firebase/storage';
+
+// Firebase configuration interface
+interface FirebaseConfig {
+  apiKey: string;
+  authDomain: string;
+  projectId: string;
+  storageBucket: string;
+  messagingSenderId: string;
+  appId: string;
+  measurementId?: string;
+}
 
 // Firebase configuration from environment variables
-const firebaseConfig = {
+const firebaseConfig: FirebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -15,10 +27,10 @@ const firebaseConfig = {
 };
 
 // Validate Firebase configuration
-const validateConfig = () => {
-  const requiredFields = ['apiKey', 'authDomain', 'projectId'];
+const validateConfig = (): void => {
+  const requiredFields: (keyof FirebaseConfig)[] = ['apiKey', 'authDomain', 'projectId'];
   const missingFields = requiredFields.filter(field => !firebaseConfig[field]);
-  
+
   if (missingFields.length > 0) {
     console.error('Missing Firebase configuration fields:', missingFields);
     throw new Error(`Firebase configuration incomplete. Missing: ${missingFields.join(', ')}`);
@@ -27,23 +39,26 @@ const validateConfig = () => {
 
 // Initialize Firebase
 validateConfig();
-const app = initializeApp(firebaseConfig);
+const app: FirebaseApp = initializeApp(firebaseConfig);
 
 // Initialize Firebase Auth
-export const auth = getAuth(app);
+export const auth: Auth = getAuth(app);
 
 // Initialize Firestore
-export const db = getFirestore(app);
+export const db: Firestore = getFirestore(app);
+
+// Initialize Firebase Storage
+export const storage: Storage = getStorage(app);
 
 // Connect to emulators only if explicitly enabled
-const USE_EMULATORS = import.meta.env.VITE_USE_EMULATORS === 'true';
+const USE_EMULATORS: boolean = import.meta.env.VITE_USE_EMULATORS === 'true';
 
 if (import.meta.env.DEV && USE_EMULATORS) {
   try {
     connectAuthEmulator(auth, 'http://localhost:9099');
     connectFirestoreEmulator(db, 'localhost', 8080);
     console.log('🔧 Connected to Firebase emulators');
-  } catch (err) {
+  } catch (err: unknown) {
     console.log('⚠️ Firebase emulators not available, using production');
   }
 }

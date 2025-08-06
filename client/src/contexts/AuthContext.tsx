@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, memo } from 'react';
+import React, { createContext, useContext, useEffect, useState, memo, ReactNode } from 'react';
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -8,10 +8,12 @@ import {
   FacebookAuthProvider,
   signInWithPopup,
   sendEmailVerification,
-  updateProfile
+  updateProfile,
+  User as FirebaseUser,
+  UserCredential
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
-import { API_BASE_URL } from '../config/api.js';
+import { API_BASE_URL } from '../config/api';
 import axios from 'axios';
 import {
   showAuthSuccessToast,
@@ -22,11 +24,37 @@ import {
   updateToastToError
 } from '../utils/toast';
 
+// Type definitions
+interface AuthContextType {
+  user: FirebaseUser | null;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<UserCredential>;
+  register: (email: string, password: string, displayName?: string) => Promise<UserCredential>;
+  logout: () => Promise<void>;
+  loginWithGoogle: () => Promise<UserCredential>;
+  loginWithFacebook: () => Promise<UserCredential>;
+  updateUserProfile: (updates: { displayName?: string; photoURL?: string }) => Promise<void>;
+  sendVerificationEmail: () => Promise<void>;
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+interface BackendUserData {
+  firebaseUid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  emailVerified: boolean;
+  providerData: any[];
+}
+
 // Create Auth Context
-const AuthContext = createContext({});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Custom hook to use auth context
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
@@ -35,9 +63,9 @@ export const useAuth = () => {
 };
 
 // Add this function inside AuthContext component
-const syncUserWithBackend = async (firebaseUser) => {
+const syncUserWithBackend = async (firebaseUser: FirebaseUser): Promise<void> => {
   try {
-    const userData = {
+    const userData: BackendUserData = {
       firebaseUid: firebaseUser.uid,
       email: firebaseUser.email,
       displayName: firebaseUser.displayName,
@@ -58,16 +86,16 @@ const syncUserWithBackend = async (firebaseUser) => {
 };
 
 // Auth Provider Component
-const AuthProvider = memo(({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const AuthProvider = memo(({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Clear error helper
-  const clearError = () => setError(null);
+  const clearError = (): void => setError(null);
 
   // Sign up with email and password
-  const signUp = async (email, password, displayName) => {
+  const register = async (email: string, password: string, displayName?: string): Promise<UserCredential> => {
     const toastId = showLoadingToast('Creating your account...');
 
     try {
@@ -88,7 +116,7 @@ const AuthProvider = memo(({ children }) => {
       showAuthSuccessToast('register');
 
       return result;
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
       updateToastToError(toastId, 'Failed to create account. Please try again.');
       showAuthErrorToast('register', error.message);
@@ -99,7 +127,7 @@ const AuthProvider = memo(({ children }) => {
   };
 
   // Sign in with email and password
-  const signIn = async (email, password) => {
+  const login = async (email: string, password: string): Promise<UserCredential> => {
     const toastId = showLoadingToast('Signing you in...');
 
     try {
@@ -112,7 +140,7 @@ const AuthProvider = memo(({ children }) => {
       showAuthSuccessToast('login');
 
       return result;
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
       updateToastToError(toastId, 'Login failed. Please check your credentials.');
       showAuthErrorToast('login', error.message);
@@ -123,7 +151,7 @@ const AuthProvider = memo(({ children }) => {
   };
 
   // Sign in with Google
-  const signInWithGoogle = async () => {
+  const loginWithGoogle = async (): Promise<UserCredential> => {
     const toastId = showLoadingToast('Signing in with Google...');
 
     try {
@@ -140,7 +168,7 @@ const AuthProvider = memo(({ children }) => {
       showAuthSuccessToast('login');
 
       return result;
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
       updateToastToError(toastId, 'Google sign-in failed. Please try again.');
       showAuthErrorToast('login', error.message);
@@ -151,17 +179,17 @@ const AuthProvider = memo(({ children }) => {
   };
 
   // Sign in with Facebook
-  const signInWithFacebook = async () => {
+  const loginWithFacebook = async (): Promise<UserCredential> => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const provider = new FacebookAuthProvider();
       provider.addScope('email');
-      
+
       const result = await signInWithPopup(auth, provider);
       return result;
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
       throw error;
     } finally {
@@ -170,14 +198,14 @@ const AuthProvider = memo(({ children }) => {
   };
 
   // Sign out
-  const logout = async () => {
+  const logout = async (): Promise<void> => {
     try {
       setLoading(true);
       setError(null);
 
       await signOut(auth);
       showAuthSuccessToast('logout');
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
       showAuthErrorToast('logout', 'Failed to sign out. Please try again.');
       throw error;
@@ -186,12 +214,34 @@ const AuthProvider = memo(({ children }) => {
     }
   };
 
+  // Update user profile
+  const updateUserProfile = async (updates: { displayName?: string; photoURL?: string }): Promise<void> => {
+    if (!user) throw new Error('No user logged in');
+
+    try {
+      await updateProfile(user, updates);
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
+  // Send verification email
+  const sendVerificationEmail = async (): Promise<void> => {
+    if (!user) throw new Error('No user logged in');
+
+    try {
+      await sendEmailVerification(user);
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
   // Listen for auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user: FirebaseUser | null) => {
       setUser(user);
       setLoading(false);
-      
+
       if (user) {
         // Sync user with backend when signed in
         try {
@@ -210,16 +260,16 @@ const AuthProvider = memo(({ children }) => {
   }, []);
 
   // Auth context value
-  const value = {
+  const value: AuthContextType = {
     user,
     loading,
-    error,
-    signUp,
-    signIn,
-    signInWithGoogle,
-    signInWithFacebook,
+    login,
+    register,
     logout,
-    clearError
+    loginWithGoogle,
+    loginWithFacebook,
+    updateUserProfile,
+    sendVerificationEmail
   };
 
   return (

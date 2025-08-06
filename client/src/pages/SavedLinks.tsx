@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SavedLinks = () => {
+const SavedLinks: React.FC = () => {
   return (
     <div className="min-h-screen theme-bg-page theme-text-primary">
       <div className="container mx-auto px-4 py-8 pt-24">

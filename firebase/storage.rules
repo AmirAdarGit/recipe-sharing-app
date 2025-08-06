@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow authenticated users to upload/read/delete their own recipe images
+    match /recipes/{userId}/{allPaths=**} {
+      allow read, write, delete: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow public read access to all recipe images
+    match /recipes/{allPaths=**} {
+      allow read: if true;
+    }
+    
+    // Allow authenticated users to upload profile images
+    match /profiles/{userId}/{allPaths=**} {
+      allow read, write, delete: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Fallback: deny all other operations
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

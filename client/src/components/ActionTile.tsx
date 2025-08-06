@@ -1,7 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const ActionTile = ({
+interface ActionTileProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  to?: string;
+  isComingSoon?: boolean;
+  onClick?: () => void;
+}
+
+const ActionTile: React.FC<ActionTileProps> = ({
   icon,
   title,
   description,

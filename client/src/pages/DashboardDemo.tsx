@@ -4,7 +4,7 @@ import ProfessionalTopbar from '../components/ProfessionalTopbar';
 import '../styles/dashboard-header.css';
 import '../styles/professional-topbar.css';
 
-const DashboardDemo = () => {
+const DashboardDemo: React.FC = () => {
   return (
     <div className="min-h-screen theme-bg-page">
       <ProfessionalTopbar />

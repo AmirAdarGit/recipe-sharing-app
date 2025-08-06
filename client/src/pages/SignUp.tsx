@@ -1,27 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { showWarningToast, VALIDATION_TOASTS } from '../utils/toast';
 
-const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [validationErrors, setValidationErrors] = useState({});
+interface FormData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
-  const { signIn, signInWithGoogle, signInWithFacebook, user, error, clearError } = useAuth();
+interface ValidationErrors {
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
+const SignUp: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+
+  const { register, loginWithGoogle, loginWithFacebook, user } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   // Redirect if already authenticated
   useEffect(() => {
     if (user) {
-      const from = location.state?.from?.pathname || '/';
-      navigate(from, { replace: true });
+      navigate('/', { replace: true });
     }
-  }, [user, navigate, location]);
+  }, [user, navigate]);
 
   // Clear errors when component mounts
   useEffect(() => {
@@ -49,6 +64,12 @@ const Login = () => {
   const validateForm = () => {
     const errors = {};
     
+    if (!formData.name.trim()) {
+      errors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      errors.name = 'Name must be at least 2 characters';
+    }
+    
     if (!formData.email) {
       errors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -61,6 +82,12 @@ const Login = () => {
       errors.password = 'Password must be at least 6 characters';
     }
     
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+    
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -70,59 +97,101 @@ const Login = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      showWarningToast(VALIDATION_TOASTS.REQUIRED_FIELDS);
+      // Show specific validation error toasts
+      if (!formData.email) {
+        showWarningToast(VALIDATION_TOASTS.INVALID_EMAIL);
+      } else if (formData.password.length < 6) {
+        showWarningToast(VALIDATION_TOASTS.WEAK_PASSWORD);
+      } else if (formData.password !== formData.confirmPassword) {
+        showWarningToast(VALIDATION_TOASTS.PASSWORD_MISMATCH);
+      } else {
+        showWarningToast(VALIDATION_TOASTS.REQUIRED_FIELDS);
+      }
       return;
     }
 
     setIsLoading(true);
     try {
-      await signIn(formData.email, formData.password);
+      await signUp(formData.email, formData.password, formData.name.trim());
+      setShowSuccess(true);
+
+      // Redirect to login after 3 seconds
+      setTimeout(() => {
+        navigate('/login', {
+          state: { message: 'Account created! Please check your email to verify your account.' }
+        });
+      }, 3000);
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Sign up error:', error);
       // Error toast is handled in AuthContext
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle Google sign in
-  const handleGoogleSignIn = async () => {
+  // Handle Google sign up
+  const handleGoogleSignUp = async () => {
     setIsLoading(true);
     try {
       await signInWithGoogle();
     } catch (error) {
-      console.error('Google sign in error:', error);
+      console.error('Google sign up error:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle Facebook sign in
-  const handleFacebookSignIn = async () => {
+  // Handle Facebook sign up
+  const handleFacebookSignUp = async () => {
     setIsLoading(true);
     try {
       await signInWithFacebook();
     } catch (error) {
-      console.error('Facebook sign in error:', error);
+      console.error('Facebook sign up error:', error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (showSuccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center theme-bg-page pt-16 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+              <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="mt-6 text-center text-3xl font-extrabold theme-text-primary">
+              Account Created Successfully!
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Please check your email to verify your account.
+            </p>
+            <p className="mt-4 text-center text-sm text-gray-500">
+              Redirecting to login page...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center theme-bg-page pt-16 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold theme-text-primary">
-            Sign in to Recipe Sharing
+            Create your account
           </h2>
           <p className="mt-2 text-center text-sm theme-text-secondary">
             Or{' '}
             <Link
-              to="/signup"
+              to="/login"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              create a new account
+              sign in to your existing account
             </Link>
           </p>
         </div>
@@ -136,7 +205,29 @@ const Login = () => {
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium theme-text-primary">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
+                  validationErrors.name ? 'border-red-300' : 'border-gray-300'
+                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                placeholder="Enter your full name"
+              />
+              {validationErrors.name && (
+                <p className="mt-1 text-sm text-red-600">{validationErrors.name}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
               <input
@@ -148,8 +239,8 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  validationErrors.email ? 'border-red-300' : 'theme-border-primary'
-                } placeholder-gray-500 theme-text-primary theme-bg-primary rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  validationErrors.email ? 'border-red-300' : 'border-gray-300'
+                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                 placeholder="Enter your email"
               />
               {validationErrors.email && (
@@ -158,24 +249,46 @@ const Login = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium theme-text-primary">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <input
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
                 value={formData.password}
                 onChange={handleChange}
                 className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
                   validationErrors.password ? 'border-red-300' : 'border-gray-300'
                 } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
-                placeholder="Enter your password"
+                placeholder="Create a password"
               />
               {validationErrors.password && (
                 <p className="mt-1 text-sm text-red-600">{validationErrors.password}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                required
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
+                  validationErrors.confirmPassword ? 'border-red-300' : 'border-gray-300'
+                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                placeholder="Confirm your password"
+              />
+              {validationErrors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-600">{validationErrors.confirmPassword}</p>
               )}
             </div>
           </div>
@@ -186,7 +299,7 @@ const Login = () => {
               disabled={isLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Creating account...' : 'Create account'}
             </button>
           </div>
 
@@ -203,7 +316,7 @@ const Login = () => {
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={handleGoogleSignIn}
+                onClick={handleGoogleSignUp}
                 disabled={isLoading}
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -218,7 +331,7 @@ const Login = () => {
 
               <button
                 type="button"
-                onClick={handleFacebookSignIn}
+                onClick={handleFacebookSignUp}
                 disabled={isLoading}
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -235,4 +348,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;

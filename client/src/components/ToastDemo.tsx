@@ -6,52 +6,52 @@ import { useToast } from '../hooks/useToast';
  * Demonstrates all types of toast notifications
  * Useful for testing and showcasing the toast system
  */
-const ToastDemo = () => {
+const ToastDemo: React.FC = () => {
   const toast = useToast();
 
-  const handleBasicToasts = () => {
+  const handleBasicToasts = (): void => {
     toast.success('This is a success message!');
     setTimeout(() => toast.error('This is an error message!'), 500);
     setTimeout(() => toast.warning('This is a warning message!'), 1000);
     setTimeout(() => toast.info('This is an info message!'), 1500);
   };
 
-  const handleAuthToasts = () => {
+  const handleAuthToasts = (): void => {
     toast.authSuccess('login');
     setTimeout(() => toast.authError('login', 'Invalid credentials provided'), 500);
   };
 
-  const handleRecipeToasts = () => {
+  const handleRecipeToasts = (): void => {
     toast.recipe.createSuccess();
     setTimeout(() => toast.recipe.updateError(), 500);
     setTimeout(() => toast.recipe.deleteSuccess(), 1000);
   };
 
-  const handleProfileToasts = () => {
+  const handleProfileToasts = (): void => {
     toast.profile.updateSuccess();
     setTimeout(() => toast.profile.photoUploadError(), 500);
     setTimeout(() => toast.profile.preferencesSaved(), 1000);
   };
 
-  const handleValidationToasts = () => {
+  const handleValidationToasts = (): void => {
     toast.validation.requiredFields();
     setTimeout(() => toast.validation.invalidEmail(), 500);
     setTimeout(() => toast.validation.passwordMismatch(), 1000);
     setTimeout(() => toast.validation.weakPassword(), 1500);
   };
 
-  const handleLoadingToast = () => {
+  const handleLoadingToast = (): void => {
     const toastId = toast.loading('Processing your request...');
-    
+
     setTimeout(() => {
       toast.updateToSuccess(toastId, 'Request completed successfully!');
     }, 3000);
   };
 
-  const handleAsyncOperation = async () => {
+  const handleAsyncOperation = async (): Promise<void> => {
     try {
       await toast.asyncOperation(
-        () => new Promise(resolve => setTimeout(resolve, 2000)),
+        () => new Promise<void>(resolve => setTimeout(resolve, 2000)),
         {
           loadingMessage: 'Saving your data...',
           successMessage: 'Data saved successfully!',
@@ -63,8 +63,8 @@ const ToastDemo = () => {
     }
   };
 
-  const handlePromiseToast = () => {
-    const mockApiCall = new Promise((resolve, reject) => {
+  const handlePromiseToast = (): void => {
+    const mockApiCall = new Promise<string>((resolve, reject) => {
       setTimeout(() => {
         Math.random() > 0.5 ? resolve('Success!') : reject('Failed!');
       }, 2000);

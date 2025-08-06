@@ -1,4 +1,5 @@
 // React Router and Authentication App
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from './contexts/AuthContext';
@@ -8,6 +9,10 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Recipes from './pages/Recipes';
+import MyRecipes from './pages/MyRecipes.jsx';
+import CreateRecipe from './pages/CreateRecipe.jsx';
+// import RecipeDetail from './pages/RecipeDetail.jsx';
+// import EditRecipe from './pages/EditRecipe.jsx';
 import Categories from './pages/Categories';
 import Favorites from './pages/Favorites';
 import SavedLinks from './pages/SavedLinks';
@@ -17,7 +22,7 @@ import './App.css';
 import './styles/professional-topbar.css';
 import './styles/toast.css';
 
-function App() {
+const App: React.FC = () => {
   return (
     <AuthProvider>
       <Router>
@@ -56,6 +61,42 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/my-recipes"
+              element={
+                <ProtectedRoute>
+                  <ProfessionalTopbar />
+                  <MyRecipes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create-recipe"
+              element={
+                <ProtectedRoute>
+                  <ProfessionalTopbar />
+                  <CreateRecipe />
+                </ProtectedRoute>
+              }
+            />
+            {/* <Route
+              path="/recipe/:id"
+              element={
+                <ProtectedRoute>
+                  <ProfessionalTopbar />
+                  <RecipeDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/recipe/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <ProfessionalTopbar />
+                  <EditRecipe />
+                </ProtectedRoute>
+              }
+            /> */}
             <Route
               path="/categories"
               element={

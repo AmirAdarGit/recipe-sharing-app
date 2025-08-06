@@ -2,20 +2,21 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-const DashboardHeader = () => {
+const DashboardHeader: React.FC = () => {
   const { user, logout } = useAuth();
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [notificationCount] = useState(3); // Mock notification count
-  
-  const searchRef = useRef(null);
-  const profileDropdownRef = useRef(null);
+  const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [notificationCount] = useState<number>(3); // Mock notification count
+
+  const searchRef = useRef<HTMLInputElement>(null);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent): void => {
+      const target = event.target as Node;
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(target)) {
         setIsProfileDropdownOpen(false);
       }
     };
@@ -24,7 +25,7 @@ const DashboardHeader = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     try {
       await logout();
       setIsProfileDropdownOpen(false);
@@ -33,7 +34,7 @@ const DashboardHeader = () => {
     }
   };
 
-  const getGreeting = () => {
+  const getGreeting = (): string => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
     if (hour < 18) return 'Good afternoon';
