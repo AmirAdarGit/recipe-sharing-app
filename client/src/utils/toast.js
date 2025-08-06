@@ -107,7 +107,6 @@ export const AUTH_TOASTS = {
   LOGOUT_SUCCESS: 'You have been successfully logged out.',
   REGISTER_SUCCESS: 'Account created successfully! Welcome to Recipe Sharing!',
   REGISTER_ERROR: 'Registration failed. Please try again.',
-  TOKEN_EXPIRED: 'Your session has expired. Please log in again.',
   UNAUTHORIZED: 'You are not authorized to access this resource.',
   NETWORK_ERROR: 'Network error. Please check your connection and try again.'
 };
@@ -176,11 +175,10 @@ export const showAuthErrorToast = (action, customMessage = null) => {
   const messages = {
     login: AUTH_TOASTS.LOGIN_ERROR,
     register: AUTH_TOASTS.REGISTER_ERROR,
-    token: AUTH_TOASTS.TOKEN_EXPIRED,
     unauthorized: AUTH_TOASTS.UNAUTHORIZED,
     network: AUTH_TOASTS.NETWORK_ERROR
   };
-  
+
   const message = customMessage || messages[action] || 'Authentication failed!';
   showErrorToast(message);
 };

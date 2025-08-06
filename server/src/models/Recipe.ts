@@ -63,9 +63,10 @@ const recipeSchema = new Schema<IRecipeDocument>({
       required: true,
       trim: true
     },
-    amount: {
-      type: String,
-      required: true
+    quantity: {
+      type: Number,
+      required: true,
+      min: 0
     },
     unit: {
       type: String,

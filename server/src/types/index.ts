@@ -70,7 +70,7 @@ export interface IUserDocument extends IUser, Document {
 // Recipe Types
 export interface IIngredient {
   name: string;
-  amount: string;
+  quantity: number;
   unit: string;
   notes?: string;
 }

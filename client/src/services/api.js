@@ -16,16 +16,11 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add auth token
+// Request interceptor for general configuration
 api.interceptors.request.use(
   (config) => {
-    // Get JWT token from localStorage
-    const token = localStorage.getItem('authToken');
-    
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    
+    // Firebase authentication is handled separately in the AuthContext
+    // No need to add JWT tokens here
     return config;
   },
   (error) => {
@@ -45,13 +40,8 @@ api.interceptors.response.use(
       
       switch (status) {
         case 401:
-          // Unauthorized - token expired or invalid
-          localStorage.removeItem('authToken');
-          showAuthErrorToast('token', AUTH_TOASTS.TOKEN_EXPIRED);
-          // Redirect to login if needed
-          if (window.location.pathname !== '/login') {
-            window.location.href = '/login';
-          }
+          // Unauthorized - handled by Firebase Auth
+          showAuthErrorToast('unauthorized', AUTH_TOASTS.UNAUTHORIZED);
           break;
           
         case 403:
@@ -97,58 +87,9 @@ api.interceptors.response.use(
 );
 
 /**
- * Authentication API calls
+ * Authentication is handled by Firebase Auth in AuthContext
+ * No separate authentication API needed
  */
-export const authAPI = {
-  // Register new user
-  register: async (userData) => {
-    try {
-      const response = await api.post('/api/auth/register', userData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  // Login user
-  login: async (credentials) => {
-    try {
-      const response = await api.post('/api/auth/login', credentials);
-      
-      // Store JWT token
-      if (response.data.data?.token) {
-        localStorage.setItem('authToken', response.data.data.token);
-      }
-      
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  // Get current user profile
-  getProfile: async () => {
-    try {
-      const response = await api.get('/api/auth/me');
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  // Logout user
-  logout: async () => {
-    try {
-      const response = await api.post('/api/auth/logout');
-      localStorage.removeItem('authToken');
-      return response.data;
-    } catch (error) {
-      // Even if logout fails on server, remove token locally
-      localStorage.removeItem('authToken');
-      throw error;
-    }
-  }
-};
 
 /**
  * User API calls
@@ -254,21 +195,6 @@ export const recipeAPI = {
  * Utility functions
  */
 export const apiUtils = {
-  // Check if user is authenticated
-  isAuthenticated: () => {
-    return !!localStorage.getItem('authToken');
-  },
-
-  // Get stored auth token
-  getAuthToken: () => {
-    return localStorage.getItem('authToken');
-  },
-
-  // Clear auth token
-  clearAuthToken: () => {
-    localStorage.removeItem('authToken');
-  },
-
   // Test API connection
   testConnection: async () => {
     try {
