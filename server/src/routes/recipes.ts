@@ -85,11 +85,11 @@ router.get('/user/:firebaseUid', async (
 ): Promise<void> => {
   try {
     const { firebaseUid } = req.params;
-    const { page = '1', limit = '20', status = 'published' } = req.query;
-    
+    const { page = '1', limit = '20', status } = req.query;
+
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
-    
+
     // Find user first
     const user = await User.findByFirebaseUid(firebaseUid);
     if (!user) {
@@ -104,19 +104,26 @@ router.get('/user/:firebaseUid', async (
       });
       return;
     }
-    
+
+    // Build query - include all recipes by default, filter by status if specified
     const query: any = { author: user._id };
-    if (status) query.status = status;
-    
+    if (status) {
+      query.status = status;
+    }
+
+    console.log(`🔍 Fetching recipes for user ${firebaseUid} with query:`, query);
+
     const recipes = await Recipe.find(query)
       .populate('author', 'displayName photoURL')
       .select('-__v')
       .sort({ createdAt: -1 })
       .limit(limitNum)
       .skip((pageNum - 1) * limitNum);
-    
+
     const total = await Recipe.countDocuments(query);
-    
+
+    console.log(`📊 Found ${recipes.length} recipes (total: ${total}) for user ${firebaseUid}`);
+
     res.json({
       success: true,
       count: recipes.length,
