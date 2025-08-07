@@ -39,9 +39,9 @@ const SignUp: React.FC = () => {
   }, [user, navigate]);
 
   // Clear errors when component mounts
-  useEffect(() => {
-    clearError();
-  }, [clearError]);
+  // useEffect(() => {
+  //   clearError();
+  // }, [clearError]);
 
   // Handle input changes
   const handleChange = (e) => {
