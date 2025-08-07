@@ -103,20 +103,17 @@ jobs:
           echo "📋 Railway CLI version:"
           railway --version
           
-          # Check if Railway CLI can authenticate with the provided token
-          # This fails because RAILWAY_TOKEN env var is not being recognized by the CLI
-          # The CLI expects the token to be available but can't find/use it properly
-          echo "🔍 Checking Railway connection..."
+          # Login using token
+          echo "🔐 Authenticating with Railway..."
+          echo "$RAILWAY_TOKEN" | railway login --token
+          
+          # Verify authentication
+          echo "� Checking Railway connection..."
           railway whoami
           
-          # Get Railway project status - this will also fail due to auth issues
-          echo "📊 Checking Railway status..."
-          railway status
-          
-          # Deploy the application - this is the main deployment command
-          # Will fail if auth or service detection doesn't work
+          # Deploy the application
           echo "🚀 Deploying to Railway..."
-          railway up
+          railway up --detach
           
           echo "✅ Railway deployment completed successfully"
         env:
