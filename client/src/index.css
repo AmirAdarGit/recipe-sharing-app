@@ -1,3 +1,8 @@
+/* Import Mobile-First Responsive Design System */
+@import './styles/responsive.css';
+@import './styles/mobile-navigation.css';
+@import './styles/mobile-utilities.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

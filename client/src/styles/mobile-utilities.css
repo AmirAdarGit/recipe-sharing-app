@@ -1,0 +1,360 @@
+/* 
+ * Mobile Utility Classes
+ * Common patterns and utilities for mobile-first design
+ */
+
+/* ========================================
+   MOBILE SPACING UTILITIES
+   ======================================== */
+
+/* Mobile-specific margins */
+.m-mobile-xs { margin: 0.25rem; }
+.m-mobile-sm { margin: 0.5rem; }
+.m-mobile-md { margin: 0.75rem; }
+.m-mobile-lg { margin: 1rem; }
+.m-mobile-xl { margin: 1.5rem; }
+
+.mt-mobile-xs { margin-top: 0.25rem; }
+.mt-mobile-sm { margin-top: 0.5rem; }
+.mt-mobile-md { margin-top: 0.75rem; }
+.mt-mobile-lg { margin-top: 1rem; }
+.mt-mobile-xl { margin-top: 1.5rem; }
+
+.mb-mobile-xs { margin-bottom: 0.25rem; }
+.mb-mobile-sm { margin-bottom: 0.5rem; }
+.mb-mobile-md { margin-bottom: 0.75rem; }
+.mb-mobile-lg { margin-bottom: 1rem; }
+.mb-mobile-xl { margin-bottom: 1.5rem; }
+
+/* Mobile-specific padding */
+.p-mobile-xs { padding: 0.25rem; }
+.p-mobile-sm { padding: 0.5rem; }
+.p-mobile-md { padding: 0.75rem; }
+.p-mobile-lg { padding: 1rem; }
+.p-mobile-xl { padding: 1.5rem; }
+
+.px-mobile-xs { padding-left: 0.25rem; padding-right: 0.25rem; }
+.px-mobile-sm { padding-left: 0.5rem; padding-right: 0.5rem; }
+.px-mobile-md { padding-left: 0.75rem; padding-right: 0.75rem; }
+.px-mobile-lg { padding-left: 1rem; padding-right: 1rem; }
+.px-mobile-xl { padding-left: 1.5rem; padding-right: 1.5rem; }
+
+.py-mobile-xs { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.py-mobile-sm { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-mobile-md { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.py-mobile-lg { padding-top: 1rem; padding-bottom: 1rem; }
+.py-mobile-xl { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+
+/* ========================================
+   MOBILE LAYOUT UTILITIES
+   ======================================== */
+
+/* Mobile flex utilities */
+.flex-mobile-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-mobile-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-mobile-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-mobile-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-mobile-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Mobile grid utilities */
+.grid-mobile-1 { 
+  display: grid; 
+  grid-template-columns: 1fr; 
+  gap: 1rem;
+}
+
+.grid-mobile-2 { 
+  display: grid; 
+  grid-template-columns: 1fr; 
+  gap: 1rem;
+}
+
+@media (min-width: 481px) {
+  .grid-mobile-2 { 
+    grid-template-columns: repeat(2, 1fr); 
+  }
+}
+
+/* ========================================
+   MOBILE VISIBILITY UTILITIES
+   ======================================== */
+
+/* Show/hide on mobile */
+.show-mobile { display: block; }
+.hide-mobile { display: none; }
+.show-mobile-flex { display: flex; }
+.show-mobile-grid { display: grid; }
+
+@media (min-width: 481px) {
+  .show-mobile { display: none; }
+  .hide-mobile { display: block; }
+  .show-mobile-flex { display: none; }
+  .show-mobile-grid { display: none; }
+  .hide-mobile-flex { display: flex; }
+  .hide-mobile-grid { display: grid; }
+}
+
+/* Show/hide on tablet */
+.show-tablet { display: none; }
+.hide-tablet { display: block; }
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .show-tablet { display: block; }
+  .hide-tablet { display: none; }
+}
+
+/* Show/hide on desktop */
+.show-desktop { display: none; }
+.hide-desktop { display: block; }
+
+@media (min-width: 769px) {
+  .show-desktop { display: block; }
+  .hide-desktop { display: none; }
+}
+
+/* ========================================
+   MOBILE TYPOGRAPHY UTILITIES
+   ======================================== */
+
+/* Mobile text sizes */
+.text-mobile-xs { font-size: 0.75rem; }
+.text-mobile-sm { font-size: 0.875rem; }
+.text-mobile-base { font-size: 1rem; }
+.text-mobile-lg { font-size: 1.125rem; }
+.text-mobile-xl { font-size: 1.25rem; }
+
+/* Mobile text alignment */
+.text-mobile-left { text-align: left; }
+.text-mobile-center { text-align: center; }
+.text-mobile-right { text-align: right; }
+
+@media (min-width: 769px) {
+  .text-mobile-center { text-align: left; }
+}
+
+/* Mobile line heights */
+.leading-mobile-tight { line-height: 1.2; }
+.leading-mobile-normal { line-height: 1.5; }
+.leading-mobile-relaxed { line-height: 1.6; }
+
+/* ========================================
+   MOBILE BUTTON UTILITIES
+   ======================================== */
+
+/* Mobile button sizes */
+.btn-mobile-sm {
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.btn-mobile-md {
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
+
+.btn-mobile-lg {
+  min-height: 52px;
+  padding: 1rem 1.25rem;
+  font-size: 1.125rem;
+}
+
+/* Mobile button layouts */
+.btn-mobile-full {
+  width: 100%;
+  display: block;
+}
+
+.btn-mobile-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btn-mobile-stack .btn {
+  width: 100%;
+}
+
+@media (min-width: 481px) {
+  .btn-mobile-stack {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .btn-mobile-stack .btn {
+    width: auto;
+    flex: 1;
+  }
+}
+
+/* ========================================
+   MOBILE FORM UTILITIES
+   ======================================== */
+
+/* Mobile form layouts */
+.form-mobile-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-mobile-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (min-width: 481px) {
+  .form-mobile-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  }
+  
+  .form-mobile-row .form-mobile-group {
+    flex: 1;
+  }
+}
+
+/* Mobile input utilities */
+.input-mobile {
+  min-height: 48px;
+  padding: 0.875rem;
+  font-size: 16px; /* Prevent zoom on iOS */
+  border-radius: 8px;
+  width: 100%;
+}
+
+/* ========================================
+   MOBILE CARD UTILITIES
+   ======================================== */
+
+/* Mobile card layouts */
+.card-mobile {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-mobile-compact {
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.card-mobile-spacious {
+  padding: 1.5rem;
+}
+
+@media (min-width: 769px) {
+  .card-mobile {
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-mobile-spacious {
+    padding: 2rem;
+  }
+}
+
+/* Mobile card grids */
+.cards-mobile-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 481px) {
+  .cards-mobile-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 769px) {
+  .cards-mobile-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* ========================================
+   MOBILE TOUCH UTILITIES
+   ======================================== */
+
+/* Touch-friendly elements */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.touch-target-lg {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* Remove touch highlights */
+.no-touch-highlight {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Touch feedback */
+.touch-feedback {
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.touch-feedback:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+/* ========================================
+   MOBILE PERFORMANCE UTILITIES
+   ======================================== */
+
+/* GPU acceleration for animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize for mobile scrolling */
+.smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .respect-motion-preference {
+    animation: none !important;
+    transition: none !important;
+  }
+}

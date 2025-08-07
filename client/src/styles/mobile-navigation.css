@@ -1,0 +1,364 @@
+/* 
+ * Mobile Navigation System
+ * Touch-friendly navigation for Recipe Sharing App
+ */
+
+/* ========================================
+   MOBILE NAVIGATION VARIABLES
+   ======================================== */
+
+:root {
+  /* Mobile nav heights */
+  --mobile-nav-height: 60px;
+  --mobile-nav-item-height: 48px;
+  
+  /* Mobile nav z-index */
+  --mobile-nav-z: 1000;
+  --mobile-overlay-z: 999;
+  
+  /* Mobile nav colors */
+  --mobile-nav-bg: var(--color-bg-primary);
+  --mobile-nav-border: var(--color-border-primary);
+  --mobile-nav-text: var(--color-text-primary);
+  --mobile-nav-active: var(--color-accent-primary);
+}
+
+/* ========================================
+   MOBILE HEADER & HAMBURGER MENU
+   ======================================== */
+
+.mobile-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--mobile-nav-height);
+  background: var(--mobile-nav-bg);
+  border-bottom: 1px solid var(--mobile-nav-border);
+  z-index: var(--mobile-nav-z);
+  padding: 0 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .mobile-header {
+    display: flex;
+  }
+  
+  /* Add top padding to body when mobile header is active */
+  body.mobile-nav-active {
+    padding-top: var(--mobile-nav-height);
+  }
+}
+
+.mobile-logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--mobile-nav-text);
+  text-decoration: none;
+}
+
+.mobile-menu-toggle {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--mobile-nav-text);
+  font-size: 1.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  
+  /* Touch optimizations */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.mobile-menu-toggle:hover,
+.mobile-menu-toggle:focus {
+  background: var(--color-bg-secondary);
+}
+
+/* Hamburger icon animation */
+.hamburger {
+  width: 24px;
+  height: 18px;
+  position: relative;
+  transform: rotate(0deg);
+  transition: 0.3s ease-in-out;
+}
+
+.hamburger span {
+  display: block;
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background: var(--mobile-nav-text);
+  border-radius: 1px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: 0.25s ease-in-out;
+}
+
+.hamburger span:nth-child(1) {
+  top: 0px;
+}
+
+.hamburger span:nth-child(2) {
+  top: 8px;
+}
+
+.hamburger span:nth-child(3) {
+  top: 16px;
+}
+
+/* Hamburger to X animation */
+.hamburger.open span:nth-child(1) {
+  top: 8px;
+  transform: rotate(135deg);
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+  left: -60px;
+}
+
+.hamburger.open span:nth-child(3) {
+  top: 8px;
+  transform: rotate(-135deg);
+}
+
+/* ========================================
+   MOBILE SLIDE-OUT MENU
+   ======================================== */
+
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: var(--mobile-overlay-z);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-menu-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100vh;
+  background: var(--mobile-nav-bg);
+  z-index: var(--mobile-nav-z);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu.open {
+  transform: translateX(0);
+}
+
+.mobile-menu-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--mobile-nav-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--mobile-nav-height);
+}
+
+.mobile-menu-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mobile-nav-text);
+}
+
+.mobile-menu-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--mobile-nav-text);
+  cursor: pointer;
+  padding: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  
+  /* Touch optimizations */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-menu-close:hover {
+  background: var(--color-bg-secondary);
+}
+
+/* ========================================
+   MOBILE MENU NAVIGATION
+   ======================================== */
+
+.mobile-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-nav-item {
+  border-bottom: 1px solid var(--mobile-nav-border);
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  color: var(--mobile-nav-text);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  min-height: var(--mobile-nav-item-height);
+  transition: background-color 0.2s, color 0.2s;
+  
+  /* Touch optimizations */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link:focus {
+  background: var(--color-bg-secondary);
+}
+
+.mobile-nav-link.active {
+  background: var(--color-accent-light);
+  color: var(--mobile-nav-active);
+  font-weight: 600;
+}
+
+.mobile-nav-icon {
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+  width: 24px;
+  text-align: center;
+}
+
+/* ========================================
+   MOBILE BOTTOM NAVIGATION (OPTIONAL)
+   ======================================== */
+
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--mobile-nav-bg);
+  border-top: 1px solid var(--mobile-nav-border);
+  z-index: var(--mobile-nav-z);
+  padding: 0.5rem 0;
+}
+
+@media (max-width: 480px) {
+  .mobile-bottom-nav {
+    display: flex;
+  }
+  
+  /* Add bottom padding to body when bottom nav is active */
+  body.mobile-bottom-nav-active {
+    padding-bottom: 70px;
+  }
+}
+
+.mobile-bottom-nav-list {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-bottom-nav-item {
+  flex: 1;
+}
+
+.mobile-bottom-nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  color: var(--mobile-nav-text);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  min-height: 44px;
+  justify-content: center;
+  
+  /* Touch optimizations */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-bottom-nav-link.active {
+  color: var(--mobile-nav-active);
+}
+
+.mobile-bottom-nav-icon {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* ========================================
+   ACCESSIBILITY & PERFORMANCE
+   ======================================== */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu,
+  .mobile-menu-overlay,
+  .hamburger,
+  .hamburger span {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .mobile-header,
+  .mobile-menu {
+    border: 2px solid;
+  }
+  
+  .mobile-nav-link:focus {
+    outline: 2px solid;
+    outline-offset: 2px;
+  }
+}
+
+/* Focus management for keyboard navigation */
+.mobile-menu-toggle:focus,
+.mobile-nav-link:focus,
+.mobile-bottom-nav-link:focus {
+  outline: 2px solid var(--mobile-nav-active);
+  outline-offset: 2px;
+}
