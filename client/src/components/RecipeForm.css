@@ -1,10 +1,65 @@
+/* Recipe Form Container - Theme Aware */
 .recipe-form-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  background: #fff;
+  background: var(--color-bg-primary);
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-colors);
+  
+  /* Ensure proper theme inheritance */
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-primary);
+}
+
+/* Dark theme specific adjustments */
+[data-theme="dark"] .recipe-form-container,
+.dark .recipe-form-container {
+  background: var(--color-bg-primary);
+  border-color: var(--color-border-primary);
+  box-shadow: var(--shadow-md);
+}
+
+/* Form focus states for dark theme */
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .form-group select:focus,
+[data-theme="dark"] .form-group textarea:focus,
+.dark .form-group input:focus,
+.dark .form-group select:focus,
+.dark .form-group textarea:focus {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1); /* Adjusted for dark theme */
+}
+
+/* Placeholder text for dark theme */
+[data-theme="dark"] .form-group input::placeholder,
+[data-theme="dark"] .form-group textarea::placeholder,
+.dark .form-group input::placeholder,
+.dark .form-group textarea::placeholder {
+  color: var(--color-text-tertiary);
+  opacity: 0.7;
+}
+
+/* Select dropdown for dark theme */
+[data-theme="dark"] .form-group select,
+.dark .form-group select {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-primary);
+}
+
+/* Tags input for dark theme */
+[data-theme="dark"] .tags-input,
+.dark .tags-input {
+  background: var(--color-bg-primary);
+  border-color: var(--color-border-primary);
+}
+
+[data-theme="dark"] .tags-input:focus-within,
+.dark .tags-input:focus-within {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
 }
 
 .recipe-form-header {
@@ -13,15 +68,17 @@
 }
 
 .recipe-form-header h1 {
-  color: #2d3748;
+  color: var(--color-text-primary);
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  transition: var(--transition-colors);
 }
 
 .recipe-form-header p {
-  color: #718096;
+  color: var(--color-text-secondary);
   font-size: 1.1rem;
+  transition: var(--transition-colors);
 }
 
 .recipe-form {
@@ -32,23 +89,26 @@
 
 /* Form Sections */
 .form-section {
-  background: #f8f9fa;
+  background: var(--color-bg-secondary);
   padding: 1.5rem;
   border-radius: 8px;
-  border-left: 4px solid #3182ce;
+  border-left: 4px solid var(--color-accent-primary);
+  transition: var(--transition-colors);
 }
 
 .form-section h2 {
-  color: #2d3748;
+  color: var(--color-text-primary);
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  transition: var(--transition-colors);
 }
 
 .section-description {
-  color: #718096;
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
   margin-bottom: 1rem;
+  transition: var(--transition-colors);
 }
 
 /* Form Groups */
@@ -58,9 +118,10 @@
 
 .form-group label {
   display: block;
-  color: #4a5568;
+  color: var(--color-text-primary);
   font-weight: 500;
   margin-bottom: 0.5rem;
+  transition: var(--transition-colors);
 }
 
 .form-group input,
@@ -68,18 +129,20 @@
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--color-border-primary);
   border-radius: 6px;
   font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: var(--transition-colors);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #3182ce;
-  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .form-row {
@@ -90,9 +153,10 @@
 
 .char-count {
   font-size: 0.8rem;
-  color: #718096;
+  color: var(--color-text-tertiary);
   text-align: right;
   margin-top: 0.25rem;
+  transition: var(--transition-colors);
 }
 
 /* Ingredient Rows */
@@ -102,9 +166,10 @@
   gap: 0.5rem;
   margin-bottom: 1rem;
   padding: 1rem;
-  background: white;
+  background: var(--color-bg-primary);
   border-radius: 6px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border-primary);
+  transition: var(--transition-colors);
 }
 
 .ingredient-fields {
@@ -128,9 +193,10 @@
   gap: 1rem;
   margin-bottom: 1rem;
   padding: 1rem;
-  background: white;
+  background: var(--color-bg-primary);
   border-radius: 6px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border-primary);
+  transition: var(--transition-colors);
 }
 
 .instruction-number {
@@ -139,11 +205,12 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  background: #3182ce;
-  color: white;
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
   border-radius: 50%;
   font-weight: 600;
   flex-shrink: 0;
+  transition: var(--transition-colors);
 }
 
 .instruction-content {
@@ -156,14 +223,15 @@
 
 .instruction-duration label {
   font-size: 0.8rem;
-  color: #718096;
+  color: var(--color-text-tertiary);
+  transition: var(--transition-colors);
 }
 
 /* Buttons */
 .btn-add,
 .btn-add-tag {
-  background: #48bb78;
-  color: white;
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -174,12 +242,12 @@
 
 .btn-add:hover,
 .btn-add-tag:hover {
-  background: #38a169;
+  background: var(--color-accent-hover);
 }
 
 .btn-remove {
-  background: #f56565;
-  color: white;
+  background: var(--color-error);
+  color: var(--color-text-inverse);
   border: none;
   width: 2rem;
   height: 2rem;
@@ -191,11 +259,11 @@
 }
 
 .btn-remove:hover:not(:disabled) {
-  background: #e53e3e;
+  background: var(--color-error-hover);
 }
 
 .btn-remove:disabled {
-  background: #cbd5e0;
+  background: var(--color-border-secondary);
   cursor: not-allowed;
 }
 
@@ -206,9 +274,11 @@
   gap: 0.5rem;
   align-items: center;
   padding: 0.5rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--color-border-primary);
   border-radius: 6px;
   min-height: 3rem;
+  background: var(--color-bg-primary);
+  transition: var(--transition-colors);
 }
 
 .tags-list {
@@ -221,17 +291,18 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  background: #3182ce;
-  color: white;
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
+  transition: var(--transition-colors);
 }
 
 .tag button {
   background: none;
   border: none;
-  color: white;
+  color: var(--color-text-inverse);
   cursor: pointer;
   font-size: 1rem;
   line-height: 1;
@@ -242,6 +313,8 @@
   border: none;
   outline: none;
   min-width: 120px;
+  background: transparent;
+  color: var(--color-text-primary);
 }
 
 /* Privacy Toggle */
@@ -260,9 +333,9 @@
   position: relative;
   width: 3rem;
   height: 1.5rem;
-  background: #cbd5e0;
+  background: var(--color-border-secondary);
   border-radius: 1rem;
-  transition: background-color 0.2s;
+  transition: var(--transition-colors);
 }
 
 .toggle-slider::before {
@@ -272,13 +345,13 @@
   left: 2px;
   width: 1.25rem;
   height: 1.25rem;
-  background: white;
+  background: var(--color-bg-primary);
   border-radius: 50%;
-  transition: transform 0.2s;
+  transition: transform 0.2s, background-color var(--transition-colors);
 }
 
 .privacy-toggle input:checked + .toggle-slider {
-  background: #48bb78;
+  background: var(--color-accent-primary);
 }
 
 .privacy-toggle input:checked + .toggle-slider::before {
@@ -287,23 +360,26 @@
 
 .toggle-label {
   font-weight: 500;
-  color: #4a5568;
+  color: var(--color-text-primary);
+  transition: var(--transition-colors);
 }
 
 .privacy-description {
   font-size: 0.8rem;
-  color: #718096;
+  color: var(--color-text-tertiary);
   margin-top: 0.25rem;
+  transition: var(--transition-colors);
 }
 
 /* Time Display */
 .total-time .time-display {
   padding: 0.75rem;
-  background: #edf2f7;
+  background: var(--color-bg-tertiary);
   border-radius: 6px;
   font-weight: 600;
-  color: #2d3748;
+  color: var(--color-text-primary);
   text-align: center;
+  transition: var(--transition-colors);
 }
 
 /* Form Actions */
@@ -312,7 +388,8 @@
   justify-content: flex-end;
   gap: 1rem;
   padding-top: 2rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--color-border-primary);
+  transition: var(--transition-colors);
 }
 
 .btn-primary,
@@ -326,31 +403,33 @@
 }
 
 .btn-primary {
-  background: #3182ce;
-  color: white;
-  border-color: #3182ce;
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-accent-primary);
+  transition: var(--transition-colors);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #2c5aa0;
-  border-color: #2c5aa0;
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 .btn-primary:disabled {
-  background: #cbd5e0;
-  border-color: #cbd5e0;
+  background: var(--color-border-secondary);
+  border-color: var(--color-border-secondary);
   cursor: not-allowed;
 }
 
 .btn-secondary {
-  background: white;
-  color: #4a5568;
-  border-color: #e2e8f0;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-primary);
+  transition: var(--transition-colors);
 }
 
 .btn-secondary:hover {
-  background: #f7fafc;
-  border-color: #cbd5e0;
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border-secondary);
 }
 
 /* Responsive Design */

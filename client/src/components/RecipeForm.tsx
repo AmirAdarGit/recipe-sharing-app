@@ -270,11 +270,6 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
 
   return (
     <div className="recipe-form-container">
-      <div className="recipe-form-header">
-        <h1>{isEditing ? 'Edit Recipe' : 'Create New Recipe'}</h1>
-        <p>Share your culinary creation with the world!</p>
-      </div>
-
       <form onSubmit={handleSubmit} className="recipe-form">
         {/* Basic Information */}
         <section className="form-section">
