@@ -56,6 +56,7 @@ jobs:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
           VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
@@ -80,111 +81,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
       - name: Install Railway CLI
-        run: npm install -g @railway/cli@latest
-
-      - name: Verify Railway secrets
         run: |
-          echo "Checking if Railway secrets are set..."
+          npm install -g @railway/cli@latest
+          railway --version
+
+      - name: Verify Railway Authentication
+        run: |
+          echo "🔐 Verifying Railway authentication..."
           if [ -z "$RAILWAY_TOKEN" ]; then
             echo "❌ RAILWAY_TOKEN is not set"
             exit 1
           fi
-          if [ -z "$RAILWAY_PROJECT_ID" ]; then
-            echo "❌ RAILWAY_PROJECT_ID is not set"
-            exit 1
-          fi
-          if [ -z "$RAILWAY_ENVIRONMENT_ID" ]; then
-            echo "❌ RAILWAY_ENVIRONMENT_ID is not set"
-            exit 1
-          fi
-          echo "✅ All Railway secrets are configured"
+          echo "✅ Railway token is configured"
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
-
-      - name: Debug Railway Environment
-        run: |
-          echo "🔍 Debugging Railway deployment..."
-          echo "Working directory: $(pwd)"
-          echo "Files in current directory:"
-          ls -la
-          echo ""
-          echo "Checking if package.json exists:"
-          if [ -f "package.json" ]; then
-            echo "✅ package.json found"
-            echo "Package.json content:"
-            cat package.json
-          else
-            echo "❌ package.json not found"
-          fi
-          echo ""
-          echo "Railway CLI version:"
-          railway --version
-          echo ""
-          echo "Environment variables (masked):"
-          echo "RAILWAY_TOKEN: ${RAILWAY_TOKEN:0:10}..."
-          echo "RAILWAY_PROJECT_ID: ${RAILWAY_PROJECT_ID}"
-          echo "RAILWAY_ENVIRONMENT_ID: ${RAILWAY_ENVIRONMENT_ID}"
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
-        working-directory: ./server
-
-      - name: Setup Railway Authentication
-        run: |
-          echo "🔐 Setting up Railway authentication via environment..."
-          echo "Railway CLI version:"
-          railway --version
-          echo "Available Railway commands:"
-          railway --help | head -20
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        working-directory: ./server
-
-      - name: Check Railway Status
-        run: |
-          echo "📊 Checking Railway status..."
-          railway status || echo "Status command failed"
-          echo ""
-          echo "Checking Railway projects:"
-          railway projects || echo "Projects command failed"
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        working-directory: ./server
 
       - name: Deploy to Railway
         run: |
           echo "🚀 Starting Railway deployment..."
-          echo "Setting up production environment variables..."
-
-          # Set MongoDB environment variable for production
-          railway variables set MONGODB_URI="${{ secrets.MONGODB_URI }}" || echo "Failed to set MONGODB_URI"
-          railway variables set NODE_ENV="production" || echo "Failed to set NODE_ENV"
-          railway variables set CORS_ORIGIN="http://localhost:5173,https://sharacipe.netlify.app" || echo "Failed to set CORS_ORIGIN"
-
-          # Set Firebase environment variables for production
-          railway variables set FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID }}" || echo "Failed to set FIREBASE_PROJECT_ID"
-          railway variables set FIREBASE_PRIVATE_KEY_ID="${{ secrets.FIREBASE_PRIVATE_KEY_ID }}" || echo "Failed to set FIREBASE_PRIVATE_KEY_ID"
-          railway variables set FIREBASE_PRIVATE_KEY="${{ secrets.FIREBASE_PRIVATE_KEY }}" || echo "Failed to set FIREBASE_PRIVATE_KEY"
-          railway variables set FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL }}" || echo "Failed to set FIREBASE_CLIENT_EMAIL"
-          railway variables set FIREBASE_CLIENT_ID="${{ secrets.FIREBASE_CLIENT_ID }}" || echo "Failed to set FIREBASE_CLIENT_ID"
-
-          echo ""
-          echo "Checking Railway authentication status..."
-          railway whoami || echo "Not authenticated"
-          echo ""
-          echo "Attempting deployment..."
-          railway deploy --detach || railway up --detach || echo "Both deploy commands failed, trying basic deploy..."
-          railway deploy || railway up || echo "All deployment methods failed"
+          echo "📋 Railway CLI version:"
+          railway --version
+          
+          echo "🔍 Checking Railway connection..."
+          railway whoami
+          
+          echo "📊 Checking Railway status..."
+          railway status
+          
+          echo "🚀 Deploying to Railway..."
+          railway up
+          
+          echo "✅ Railway deployment completed successfully"
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
         working-directory: ./server
