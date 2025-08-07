@@ -28,7 +28,7 @@ const SignUp: React.FC = () => {
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
-  const { register, loginWithGoogle, loginWithFacebook, user } = useAuth();
+  const { register, loginWithGoogle, loginWithFacebook, user, error, clearError } = useAuth();
   const navigate = useNavigate();
 
   // Redirect if already authenticated
@@ -62,7 +62,7 @@ const SignUp: React.FC = () => {
 
   // Validate form
   const validateForm = () => {
-    const errors = {};
+    const errors: any = {};
     
     if (!formData.name.trim()) {
       errors.name = 'Name is required';
@@ -129,25 +129,25 @@ const SignUp: React.FC = () => {
     }
   };
 
-  // Handle Google sign up
-  const handleGoogleSignUp = async () => {
+  // Handle Google sign in
+  const handleGoogleSignIn = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      await signInWithGoogle();
+      await loginWithGoogle();
     } catch (error) {
-      console.error('Google sign up error:', error);
+      console.error('Google sign in error:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle Facebook sign up
-  const handleFacebookSignUp = async () => {
+  // Handle Facebook sign in
+  const handleFacebookSignIn = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      await signInWithFacebook();
+      await loginWithFacebook();
     } catch (error) {
-      console.error('Facebook sign up error:', error);
+      console.error('Facebook sign in error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -316,7 +316,7 @@ const SignUp: React.FC = () => {
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={handleGoogleSignUp}
+                onClick={handleGoogleSignIn}
                 disabled={isLoading}
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -331,7 +331,7 @@ const SignUp: React.FC = () => {
 
               <button
                 type="button"
-                onClick={handleFacebookSignUp}
+                onClick={handleFacebookSignIn}
                 disabled={isLoading}
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >

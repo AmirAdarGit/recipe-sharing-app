@@ -21,7 +21,7 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
 
-  const { login, loginWithGoogle, loginWithFacebook, user } = useAuth();
+  const { login, loginWithGoogle, loginWithFacebook, user, error  } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 

@@ -29,10 +29,13 @@ interface AuthContextType {
   user: FirebaseUser | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<UserCredential>;
+  signUp: (email: string, password: string, displayName?: string) => Promise<UserCredential>;
   register: (email: string, password: string, displayName?: string) => Promise<UserCredential>;
   logout: () => Promise<void>;
   loginWithGoogle: () => Promise<UserCredential>;
   loginWithFacebook: () => Promise<UserCredential>;
+  clearError: () => void;
+  error: string | null;
   updateUserProfile: (updates: { displayName?: string; photoURL?: string }) => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
 }
