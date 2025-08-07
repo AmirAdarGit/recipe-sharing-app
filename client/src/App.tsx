@@ -11,8 +11,8 @@ import SignUp from './pages/SignUp';
 import Recipes from './pages/Recipes';
 import MyRecipes from './pages/MyRecipes.jsx';
 import CreateRecipe from './pages/CreateRecipe.jsx';
+import EditRecipe from './pages/EditRecipe';
 // import RecipeDetail from './pages/RecipeDetail.jsx';
-// import EditRecipe from './pages/EditRecipe.jsx';
 import Categories from './pages/Categories';
 import Favorites from './pages/Favorites';
 import SavedLinks from './pages/SavedLinks';
@@ -87,7 +87,7 @@ const App: React.FC = () => {
                   <RecipeDetail />
                 </ProtectedRoute>
               }
-            />
+            /> */}
             <Route
               path="/recipe/:id/edit"
               element={
@@ -96,7 +96,7 @@ const App: React.FC = () => {
                   <EditRecipe />
                 </ProtectedRoute>
               }
-            /> */}
+            />
             <Route
               path="/categories"
               element={

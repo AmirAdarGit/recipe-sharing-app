@@ -75,69 +75,69 @@ const EditRecipe: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [initialFormData, setInitialFormData] = useState<RecipeFormData | null>(null);
 
-  // Fetch recipe for editing
-  const fetchRecipe = async () => {
-    if (!id || !user) return;
+  // ✅ Simple useEffect without useCallback
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      if (!id || !user) return;
 
-    try {
-      const idToken = await user.getIdToken();
-      const response = await fetch(`${API_BASE_URL}/api/recipes/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${idToken}`
+      try {
+        const idToken = await user.getIdToken();
+        const response = await fetch(`${API_BASE_URL}/api/recipes/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${idToken}`
+          }
+        });
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            toast.error('Recipe not found');
+            navigate('/my-recipes');
+            return;
+          }
+          throw new Error('Failed to fetch recipe');
         }
-      });
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          toast.error('Recipe not found');
+        const data = await response.json();
+        const fetchedRecipe = data.data;
+
+        // Check if user owns this recipe
+        if (fetchedRecipe.authorFirebaseUid !== user.uid) {
+          toast.error('You can only edit your own recipes');
           navigate('/my-recipes');
           return;
         }
-        throw new Error('Failed to fetch recipe');
-      }
 
-      const data = await response.json();
-      const fetchedRecipe = data.data;
+        setRecipe(fetchedRecipe);
 
-      // Check if user owns this recipe
-      if (fetchedRecipe.authorFirebaseUid !== user.uid) {
-        toast.error('You can only edit your own recipes');
+        // Convert recipe data to form format
+        const formData: RecipeFormData = {
+          title: fetchedRecipe.title,
+          description: fetchedRecipe.description,
+          ingredients: fetchedRecipe.ingredients,
+          instructions: fetchedRecipe.instructions,
+          prepTime: fetchedRecipe.cookingTime.prep,
+          cookTime: fetchedRecipe.cookingTime.cook,
+          servings: fetchedRecipe.servings,
+          difficulty: fetchedRecipe.difficulty,
+          category: fetchedRecipe.category,
+          cuisine: fetchedRecipe.cuisine,
+          tags: fetchedRecipe.tags,
+          notes: fetchedRecipe.notes || '',
+          isPublic: fetchedRecipe.isPublic
+        };
+
+        setInitialFormData(formData);
+      } catch (error) {
+        console.error('Error fetching recipe:', error);
+        toast.error('Failed to load recipe for editing');
         navigate('/my-recipes');
-        return;
+      } finally {
+        setLoading(false);
       }
+    };
 
-      setRecipe(fetchedRecipe);
-
-      // Convert recipe data to form format
-      const formData: RecipeFormData = {
-        title: fetchedRecipe.title,
-        description: fetchedRecipe.description,
-        ingredients: fetchedRecipe.ingredients,
-        instructions: fetchedRecipe.instructions,
-        prepTime: fetchedRecipe.cookingTime.prep,
-        cookTime: fetchedRecipe.cookingTime.cook,
-        servings: fetchedRecipe.servings,
-        difficulty: fetchedRecipe.difficulty,
-        category: fetchedRecipe.category,
-        cuisine: fetchedRecipe.cuisine,
-        tags: fetchedRecipe.tags,
-        notes: fetchedRecipe.notes || '',
-        isPublic: fetchedRecipe.isPublic
-      };
-
-      setInitialFormData(formData);
-    } catch (error) {
-      console.error('Error fetching recipe:', error);
-      toast.error('Failed to load recipe for editing');
-      navigate('/my-recipes');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
     fetchRecipe();
-  }, [id, user]);
+  }, [id, user?.uid]); // ✅ Only depend on id and user.uid
 
   const handleSubmit = async (formData: RecipeFormData) => {
     if (!user || !recipe) {
