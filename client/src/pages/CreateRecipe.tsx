@@ -5,6 +5,44 @@ import { useToast } from '../hooks/useToast';
 import RecipeForm from '../components/RecipeForm';
 import { API_BASE_URL } from '../config/api';
 
+// TypeScript interfaces
+interface RecipeImage {
+  url: string;
+  filename: string;
+  isPrimary: boolean;
+  uploadedAt: Date;
+}
+
+interface Ingredient {
+  name: string;
+  quantity: number;
+  unit: string;
+  notes?: string;
+}
+
+interface Instruction {
+  stepNumber: number;
+  instruction: string;
+  duration?: number;
+}
+
+interface RecipeFormData {
+  title: string;
+  description: string;
+  ingredients: Ingredient[];
+  instructions: Instruction[];
+  prepTime: number;
+  cookTime: number;
+  servings: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  category: string;
+  cuisine: string;
+  tags: string[];
+  notes: string;
+  isPublic: boolean;
+  images: RecipeImage[];
+}
+
 // RecipeFormData structure:
 // {
 //   title: string,
@@ -28,20 +66,40 @@ const CreateRecipe: React.FC = () => {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const handleSubmit = async (formData: any): Promise<void> => {
+  const handleSubmit = async (formData: RecipeFormData): Promise<void> => {
     if (!user) {
       toast.authError('login', 'Please log in to create recipes');
       return;
     }
 
     try {
+      // Validate that all images are properly uploaded (not blob URLs)
+      const hasInvalidImages = formData.images.some(img =>
+        img.url.startsWith('blob:') || !img.url.startsWith('https://')
+      );
+
+      if (hasInvalidImages) {
+        toast.error('Please wait for all images to finish uploading before submitting');
+        return;
+      }
+
       // Prepare the recipe data for the API
       const recipeData = {
         authorFirebaseUid: user.uid,
         title: formData.title,
         description: formData.description,
-        ingredients: formData.ingredients,
-        instructions: formData.instructions,
+        // Ensure ingredients have the correct field names
+        ingredients: formData.ingredients.map(ingredient => ({
+          name: ingredient.name,
+          quantity: ingredient.quantity, // Ensure this is 'quantity', not 'amount'
+          unit: ingredient.unit,
+          notes: ingredient.notes || ''
+        })),
+        instructions: formData.instructions.map(instruction => ({
+          stepNumber: instruction.stepNumber,
+          instruction: instruction.instruction,
+          duration: instruction.duration || null
+        })),
         cookingTime: {
           prep: formData.prepTime,
           cook: formData.cookTime
@@ -70,6 +128,9 @@ const CreateRecipe: React.FC = () => {
         nutrition: {}
       };
 
+      // Debug: Log the recipe data being sent
+      console.log('Sending recipe data:', JSON.stringify(recipeData, null, 2));
+
       // Get Firebase ID token for authentication
       const idToken = await user.getIdToken();
 
@@ -84,11 +145,12 @@ const CreateRecipe: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('API Error Response:', errorData);
         throw new Error(errorData.message || 'Failed to create recipe');
       }
 
-      const result = await response.json();
-      
+      await response.json();
+
       toast.recipe.createSuccess();
       navigate('/my-recipes');
       

@@ -524,6 +524,8 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
 
         {/* Recipe Images */}
         <section className="form-section">
+          <h2>Recipe Images</h2>
+          <p className="section-description">Add photos to showcase your recipe</p>
           <ImageUpload
             images={formData.images}
             onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
@@ -551,7 +553,7 @@ const RecipeForm: React.FC<RecipeFormProps> = ({
                 type="text"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
-                onKeyPress={handleTagKeyPress}
+                onKeyDown={handleTagKeyPress}
                 placeholder="Add tags (press Enter)"
               />
               <button type="button" onClick={addTag} className="btn-add-tag">

@@ -140,11 +140,28 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     const newImages: RecipeImage[] = [];
 
     try {
+      // Process files one by one to ensure proper upload
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
+
+        // Validate file first
+        const validationError = validateFile(file);
+        if (validationError) {
+          toast.warning(validationError);
+          continue;
+        }
+
+        // Upload file and wait for completion
         const uploadedImage = await uploadFile(file);
         if (uploadedImage) {
-          newImages.push(uploadedImage);
+          // Verify the URL is a proper Firebase Storage URL
+          if (uploadedImage.url.startsWith('https://firebasestorage.googleapis.com/') ||
+              uploadedImage.url.startsWith('https://storage.googleapis.com/')) {
+            newImages.push(uploadedImage);
+          } else {
+            console.error('Invalid upload URL:', uploadedImage.url);
+            toast.error('Image upload failed - invalid URL received');
+          }
         }
       }
 
