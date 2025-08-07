@@ -186,7 +186,7 @@ router.get('/:id', async (req: Request<{ id: string }>, res: Response<ApiRespons
 // POST /api/recipes - Create new recipe
 router.post('/', async (req: Request<{}, ApiResponse<IRecipeDocument>, CreateRecipeRequest>, res: Response<ApiResponse<IRecipeDocument>>): Promise<void> => {
   try {
-    const { authorFirebaseUid, title, description, ingredients, instructions, cookingTime, servings, difficulty, category, cuisine, tags, dietaryInfo, nutrition } = req.body;
+    const { authorFirebaseUid, title, description, ingredients, instructions, cookingTime, servings, difficulty, category, cuisine, tags, dietaryInfo, nutrition, images, notes, isPublic } = req.body;
     
     // Validate required fields
     if (!authorFirebaseUid || !title || !description || !ingredients || !instructions || !cookingTime || !servings || !category || !cuisine) {
@@ -226,7 +226,9 @@ router.post('/', async (req: Request<{}, ApiResponse<IRecipeDocument>, CreateRec
       tags: tags || [],
       dietaryInfo: dietaryInfo || {},
       nutrition: nutrition || {},
-      images: []
+      images: images || [],
+      notes: notes || '',
+      isPublic: isPublic !== undefined ? isPublic : true
     };
     
     const recipe = await Recipe.create(recipeData);
@@ -341,6 +343,55 @@ router.put('/:id/like', async (
     res.status(500).json({
       success: false,
       message: 'Error updating recipe likes',
+      error: errorMessage
+    });
+  }
+});
+
+// PUT /api/recipes/:id - Update recipe
+router.put('/:id', async (
+  req: Request<{ id: string }, ApiResponse<IRecipeDocument>, Partial<CreateRecipeRequest>>,
+  res: Response<ApiResponse<IRecipeDocument>>
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { authorFirebaseUid, ...updateData } = req.body;
+    
+    const recipe = await Recipe.findById(id);
+
+    if (!recipe) {
+      res.status(404).json({
+        success: false,
+        message: 'Recipe not found'
+      });
+      return;
+    }
+
+    console.log('Author Firebase UID:', authorFirebaseUid);
+    console.log('Recipe author Firebase UID:', recipe.authorFirebaseUid);
+    // Verify ownership
+    if (recipe.authorFirebaseUid !== authorFirebaseUid) {
+      res.status(403).json({
+        success: false,
+        message: 'Not authorized to update this recipe'
+      });
+      return;
+    }
+    
+    const updatedRecipe = await Recipe.findByIdAndUpdate(id, updateData, { new: true })
+      .populate('author', 'displayName photoURL');
+    
+    res.json({
+      success: true,
+      message: 'Recipe updated successfully',
+      data: updatedRecipe
+    });
+  } catch (error) {
+    console.error('Error updating recipe:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    res.status(500).json({
+      success: false,
+      message: 'Error updating recipe',
       error: errorMessage
     });
   }

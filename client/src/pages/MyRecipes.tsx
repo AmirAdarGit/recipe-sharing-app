@@ -171,7 +171,10 @@ const MyRecipes: React.FC = () => {
           'Authorization': `Bearer ${idToken}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ isPublic: !currentPrivacy })
+        body: JSON.stringify({ 
+          authorFirebaseUid: user.uid, // ✅ Add this
+          isPublic: !currentPrivacy 
+        })
       });
 
       if (!response.ok) {

@@ -143,6 +143,7 @@ export interface IRecipe {
   stats: IRecipeStats;
   status: RecipeStatus;
   isPublic: boolean;
+  notes?: string;
   publishedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -231,6 +232,9 @@ export interface CreateRecipeRequest {
   tags?: string[];
   dietaryInfo?: Partial<IDietaryInfo>;
   nutrition?: INutrition;
+  images?: IRecipeImage[];
+  notes?: string;
+  isPublic?: boolean;
 }
 
 export interface RecipeQueryParams {

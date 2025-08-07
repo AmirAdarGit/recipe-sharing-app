@@ -258,7 +258,14 @@ const recipeSchema = new Schema<IRecipeDocument>({
     default: true,
     index: true
   },
-  
+
+  // Additional notes
+  notes: {
+    type: String,
+    default: '',
+    maxlength: 1000
+  },
+
   // Timestamps
   publishedAt: {
     type: Date,
