@@ -6,7 +6,7 @@ import '../styles/professional-topbar.css';
 
 const DashboardDemo: React.FC = () => {
   return (
-    <div className="min-h-screen theme-bg-page">
+    <div className="min-h-screen {/* Background handled globally */}">
       <ProfessionalTopbar />
 
       {/* Demo Content */}

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Recipes: React.FC = () => {
   return (
-    <div className="min-h-screen theme-bg-page theme-text-primary">
+    <div className="min-h-screen {/* Background handled globally */} theme-text-primary">
       <div className="container mx-auto px-4 py-8 pt-24">
         <div className="text-center">
           <h1 className="text-3xl font-bold mb-4">📚 Recipes</h1>

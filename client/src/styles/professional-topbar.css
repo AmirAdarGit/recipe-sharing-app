@@ -6,20 +6,29 @@
   @apply fixed top-0 left-0 right-0;
   @apply w-full;
   
-  /* Background & Effects */
-  background-color: var(--color-bg-overlay);
-  backdrop-filter: var(--backdrop-blur) var(--backdrop-saturate);
-  -webkit-backdrop-filter: var(--backdrop-blur) var(--backdrop-saturate);
+  /* Recipe Share Gradient Background */
+  background: linear-gradient(to right, #fb923c, #f97316, #ec4899);
+  
+  /* Glassmorphism Effect */
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
   
   /* Border & Shadow */
-  border-bottom: 1px solid var(--color-border-primary);
-  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   
   /* Z-index */
   z-index: var(--z-topbar);
   
   /* Transitions */
-  transition: var(--transition-colors);
+  transition: all 0.3s ease;
+}
+
+/* Dark mode topbar */
+.dark .topbar {
+  background: linear-gradient(to right, #ea580c, #dc2626, #be185d);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .topbar__container {
@@ -55,19 +64,32 @@
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-lg);
   
-  /* Colors */
-  color: var(--color-text-primary);
+  /* Colors - White for visibility on gradient */
+  color: white;
+  text-decoration: none;
   
-  /* Transitions */
-  transition: var(--transition-colors);
+  /* Hover Effects */
+  transition: all 0.3s ease;
+}
+
+.topbar__logo:hover {
+  transform: scale(1.05);
+  color: #fef3c7;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
 }
 
 .logo__icon {
-  /* Colors */
-  color: var(--color-accent-primary);
+  /* Colors - Yellow accent for contrast */
+  color: #fbbf24;
   
   /* Transitions */
-  transition: var(--transition-colors);
+  transition: all 0.3s ease;
+}
+
+.topbar__logo:hover .logo__icon {
+  color: #fef3c7;
+  transform: rotate(15deg);
+  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3));
 }
 
 .logo__text {
@@ -96,14 +118,14 @@
   font-weight: var(--font-weight-medium);
   text-decoration: none;
 
-  /* Colors */
-  color: var(--color-text-secondary);
+  /* Colors - White with good contrast on gradient */
+  color: rgba(255, 255, 255, 0.9);
 
   /* Border & Effects */
   border-radius: var(--radius-lg);
 
   /* Transitions */
-  transition: var(--transition-colors), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: all 0.3s ease;
 
   /* Spacing */
   gap: var(--space-sm);
@@ -114,14 +136,17 @@
 
 .nav__link:hover {
   /* Colors */
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-tertiary);
+  color: white;
+  background-color: rgba(255, 255, 255, 0.15);
 
   /* Transform */
-  transform: scale(1.02);
+  transform: scale(1.05) translateY(-1px);
 
   /* Shadow */
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  
+  /* Backdrop blur for glassmorphism */
+  backdrop-filter: blur(10px);
 }
 
 .nav__link:focus {
@@ -220,21 +245,22 @@
   /* Typography */
   font-size: var(--font-size-sm);
   
-  /* Colors */
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-primary);
+  /* Colors - Semi-transparent white for glassmorphism */
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   
   /* Border & Effects */
   border-radius: var(--radius-lg);
+  backdrop-filter: blur(10px);
   
   /* Transitions */
-  transition: var(--transition-colors), box-shadow var(--transition-normal);
+  transition: all 0.3s ease;
 }
 
 .search__input::placeholder {
-  /* Colors */
-  color: var(--color-text-tertiary);
+  /* Colors - Light placeholder for visibility */
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .search__input:focus {
@@ -242,11 +268,12 @@
   @apply outline-none;
   
   /* Colors */
-  background-color: var(--color-bg-primary);
-  border-color: var(--color-border-focus);
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
   
   /* Shadow */
-  box-shadow: 0 0 0 3px var(--color-accent-light);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
 }
 
 .search__clear {
@@ -303,14 +330,14 @@
   /* Sizing */
   @apply w-10 h-10;
 
-  /* Colors */
-  color: var(--color-text-secondary);
+  /* Colors - White for visibility on gradient */
+  color: rgba(255, 255, 255, 0.9);
 
   /* Border & Effects */
   border-radius: var(--radius-lg);
 
   /* Transitions */
-  transition: var(--transition-colors), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: all 0.3s ease;
 
   /* Transform Origin */
   transform-origin: center;
@@ -318,14 +345,15 @@
 
 .action__button:hover {
   /* Colors */
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-tertiary);
+  color: white;
+  background-color: rgba(255, 255, 255, 0.15);
 
   /* Transform */
-  transform: scale(1.05);
+  transform: scale(1.1);
 
-  /* Shadow */
-  box-shadow: var(--shadow-md);
+  /* Shadow & Effects */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .action__button:focus {
@@ -454,14 +482,14 @@
   /* Sizing & Spacing */
   @apply px-3 py-2;
 
-  /* Colors */
-  color: var(--color-text-primary);
+  /* Colors - White for visibility on gradient */
+  color: white;
 
   /* Border & Effects */
   border-radius: var(--radius-lg);
 
   /* Transitions */
-  transition: var(--transition-colors), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: all 0.3s ease;
 
   /* Spacing */
   gap: var(--space-md);
@@ -472,13 +500,14 @@
 
 .profile__trigger:hover {
   /* Colors */
-  background-color: var(--color-bg-tertiary);
+  background-color: rgba(255, 255, 255, 0.15);
 
   /* Transform */
-  transform: scale(1.02);
+  transform: scale(1.05) translateY(-1px);
 
-  /* Shadow */
-  box-shadow: var(--shadow-sm);
+  /* Shadow & Effects */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .profile__trigger:hover .profile__avatar {
@@ -983,40 +1012,46 @@
 }
 
 .auth__button--signin {
-  /* Colors */
-  color: var(--color-text-secondary);
+  /* Colors - White with border for visibility */
+  color: white;
 
   /* Border */
-  border: 1px solid var(--color-border-primary);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .auth__button--signin:hover {
   /* Colors */
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-tertiary);
+  color: white;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
 
   /* Transform */
-  transform: scale(1.02);
+  transform: scale(1.05) translateY(-1px);
 
-  /* Shadow */
-  box-shadow: var(--shadow-sm);
+  /* Shadow & Effects */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .auth__button--signup {
-  /* Colors */
-  background-color: var(--color-accent-primary);
-  color: var(--color-text-inverse);
+  /* Colors - Bright button that stands out */
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
 }
 
 .auth__button--signup:hover {
   /* Colors */
-  background-color: var(--color-accent-hover);
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
 
   /* Transform */
-  transform: scale(1.02);
+  transform: scale(1.05) translateY(-2px);
 
-  /* Shadow */
-  box-shadow: var(--shadow-md);
+  /* Shadow & Effects */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
 }
 
 .auth__button:focus {

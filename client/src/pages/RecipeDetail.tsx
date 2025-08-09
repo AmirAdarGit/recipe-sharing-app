@@ -18,8 +18,9 @@ interface Recipe {
     unit: string;
   }>;
   instructions: Array<{
-    step: number;
-    description: string;
+    stepNumber: number;
+    instruction: string;
+    duration?: number;
   }>;
   cookingTime: {
     prep: number;
@@ -210,7 +211,7 @@ const RecipeDetail: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen theme-bg-page pt-16 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen pt-16 py-12 px-4 sm:px-6 lg:px-8">{/* Background handled globally */}
         <div className="max-w-6xl mx-auto">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
@@ -223,7 +224,7 @@ const RecipeDetail: React.FC = () => {
 
   if (error || !recipe) {
     return (
-      <div className="min-h-screen theme-bg-page pt-16 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen pt-16 py-12 px-4 sm:px-6 lg:px-8">{/* Background handled globally */}
         <div className="max-w-6xl mx-auto">
           <div className="text-center theme-bg-primary rounded-lg shadow-lg p-12">
             <div className="text-6xl mb-4">🍽️</div>
@@ -250,14 +251,14 @@ const RecipeDetail: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen theme-bg-page pt-16 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen pt-16 py-8 px-4 sm:px-6 lg:px-8">{/* Background handled globally */}
       <div className="max-w-6xl mx-auto">
         {/* Header with Navigation */}
         <div className="flex items-center justify-between mb-6">
           <nav className="flex items-center space-x-2 text-sm theme-text-secondary">
             <Link to="/" className="hover:theme-text-primary">Home</Link>
             <span>/</span>
-            <Link to="/recipes" className="hover:theme-text-primary">Recipes</Link>
+            <Link to="/my-recipes" className="hover:theme-text-primary">My Recipes</Link>
             <span>/</span>
             <span className="theme-text-primary">{recipe.title}</span>
           </nav>
@@ -532,16 +533,25 @@ const RecipeDetail: React.FC = () => {
             <div className="theme-bg-primary rounded-lg shadow-lg p-6">
               <h2 className="text-2xl font-semibold theme-text-primary mb-6">👨‍🍳 Instructions</h2>
               <div className="space-y-6">
-                {recipe.instructions.map((instruction, index) => (
-                  <div key={instruction.step} className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                      {instruction.step}
+                {recipe.instructions && recipe.instructions.length > 0 ? (
+                  recipe.instructions.map((instruction, index) => (
+                    <div key={instruction.stepNumber || index} className="flex items-start space-x-4">
+                      <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        {instruction.stepNumber || index + 1}
+                      </div>
+                      <div className="flex-grow">
+                        <p className="theme-text-primary leading-relaxed">
+                          {typeof instruction === 'string' ? instruction : instruction.instruction}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex-grow">
-                      <p className="theme-text-primary leading-relaxed">{instruction.description}</p>
-                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="text-4xl mb-4">📝</div>
+                    <p className="theme-text-secondary">No instructions available for this recipe yet.</p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
 

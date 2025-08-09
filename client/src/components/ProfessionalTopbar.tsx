@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 const ProfessionalTopbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -85,37 +86,38 @@ const ProfessionalTopbar: React.FC = () => {
           {/* Left Section - Logo & Navigation */}
           <div className="topbar__left">
             {/* Logo */}
-            <div className="topbar__logo">
+            <Link to="/" className="topbar__logo">
               <div className="logo__icon">
-                <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg className="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none">
+                  <path d="M12.5 2L8.5 6.5L12.5 11L16.5 6.5L12.5 2Z" fill="currentColor"/>
+                  <path d="M18 8.5L12 12L18 15.5L20 13.5V10.5L18 8.5Z" fill="currentColor"/>
+                  <path d="M6.5 8.5L4.5 10.5V13.5L6.5 15.5L12.5 12L6.5 8.5Z" fill="currentColor"/>
+                  <path d="M12.5 13L8.5 17.5L12.5 22L16.5 17.5L12.5 13Z" fill="currentColor"/>
                 </svg>
               </div>
               <span className="logo__text">Recipe Share</span>
-            </div>
+            </Link>
 
             {/* Desktop Navigation - Only show for authenticated users */}
             {user && (
               <nav className="topbar__nav">
-                <a href="/recipes" className="nav__link">
+                <Link to="/recipes" className="nav__link">
                   <span className="nav__icon">🌍</span>
                   <span className="nav__text">Browse</span>
-                </a>
-                <a href="/my-recipes" className="nav__link">
+                </Link>
+                <Link to="/my-recipes" className="nav__link">
                   <span className="nav__icon">📚</span>
                   <span className="nav__text">My Recipes</span>
-                </a>
-                <a href="/categories" className="nav__link">
+                </Link>
+                <Link to="/categories" className="nav__link">
                   <span className="nav__icon">📖</span>
                   <span className="nav__text">Categories</span>
-                </a>
-                <a href="/favorites" className="nav__link nav__link--badge">
+                </Link>
+                <Link to="/favorites" className="nav__link nav__link--badge">
                   <span className="nav__icon">❤️</span>
                   <span className="nav__text">Favorites</span>
                   <span className="nav__badge">3</span>
-                </a>
+                </Link>
               </nav>
             )}
           </div>
@@ -190,12 +192,12 @@ const ProfessionalTopbar: React.FC = () => {
             {/* Unauthenticated User Actions */}
             {!user && (
               <div className="auth__buttons">
-                <a href="/login" className="auth__button auth__button--signin">
+                <Link to="/login" className="auth__button auth__button--signin">
                   Sign In
-                </a>
-                <a href="/signup" className="auth__button auth__button--signup">
+                </Link>
+                <Link to="/signup" className="auth__button auth__button--signup">
                   Sign Up
-                </a>
+                </Link>
               </div>
             )}
 
@@ -240,25 +242,25 @@ const ProfessionalTopbar: React.FC = () => {
                   </div>
                   
                   <div className="profile__links">
-                    <a href="/profile" className="profile__link">
+                    <Link to="/profile" className="profile__link">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                       <span>Profile Settings</span>
-                    </a>
-                    <a href="/preferences" className="profile__link">
+                    </Link>
+                    <Link to="/preferences" className="profile__link">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                       <span>Preferences</span>
-                    </a>
-                    <a href="/help" className="profile__link">
+                    </Link>
+                    <Link to="/help" className="profile__link">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span>Help & Support</span>
-                    </a>
+                    </Link>
                   </div>
                   
                   <div className="profile__footer">
@@ -296,23 +298,23 @@ const ProfessionalTopbar: React.FC = () => {
         <div className="mobile__menu" ref={mobileMenuRef}>
           <div className="mobile__menu-content">
             <nav className="mobile__nav">
-              <a href="/recipes" className="mobile__link">
+              <Link to="/recipes" className="mobile__link">
                 <span className="mobile__icon">🌍</span>
                 <span>Browse</span>
-              </a>
-              <a href="/my-recipes" className="mobile__link">
+              </Link>
+              <Link to="/my-recipes" className="mobile__link">
                 <span className="mobile__icon">📚</span>
                 <span>My Recipes</span>
-              </a>
-              <a href="/categories" className="mobile__link">
+              </Link>
+              <Link to="/categories" className="mobile__link">
                 <span className="mobile__icon">📖</span>
                 <span>Categories</span>
-              </a>
-              <a href="/favorites" className="mobile__link">
+              </Link>
+              <Link to="/favorites" className="mobile__link">
                 <span className="mobile__icon">❤️</span>
                 <span>Favorites</span>
                 <span className="mobile__badge">3</span>
-              </a>
+              </Link>
             </nav>
             
             <div className="mobile__search">

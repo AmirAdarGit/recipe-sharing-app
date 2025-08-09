@@ -155,7 +155,7 @@ const SignUp: React.FC = () => {
 
   if (showSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center theme-bg-page pt-16 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen flex items-center justify-center {/* Background handled globally */} pt-16 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
@@ -179,7 +179,7 @@ const SignUp: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center theme-bg-page pt-16 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center {/* Background handled globally */} pt-16 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold theme-text-primary">
