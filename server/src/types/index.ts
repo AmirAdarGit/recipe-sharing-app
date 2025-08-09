@@ -292,3 +292,12 @@ export interface EnvironmentVariables {
   FIREBASE_AUTH_PROVIDER_X509_CERT_URL: string;
   FIREBASE_CLIENT_X509_CERT_URL: string;
 }
+
+// Express Request Extension
+declare global {
+  namespace Express {
+    interface Request {
+      userFirebaseUid?: string;
+    }
+  }
+}

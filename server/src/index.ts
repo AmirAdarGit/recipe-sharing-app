@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { connectToDatabase, isConnectedToDatabase } from './config/database.js';
 import userRoutes from './routes/users.js';
 import recipeRoutes from './routes/recipes.js';
+import savedLinksRoutes from './routes/savedLinks.js';
 import type { ApiResponse } from './types/index.js';
 
 // Load environment variables
@@ -101,8 +102,10 @@ app.get('/api/debug', (_req: Request, res: Response) => {
 console.log('🛣️ Registering API routes...');
 console.log('📝 userRoutes type:', typeof userRoutes);
 console.log('📝 recipeRoutes type:', typeof recipeRoutes);
+console.log('📝 savedLinksRoutes type:', typeof savedLinksRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/recipes', recipeRoutes);
+app.use('/api/saved-links', savedLinksRoutes);
 console.log('✅ API routes registered successfully');
 
 // 404 handler - catch all unmatched routes

@@ -1,0 +1,428 @@
+/* 
+ * EditLinkModal Component Styles - Mobile-First Responsive Design
+ * Professional modal for editing saved links
+ */
+
+/* ========================================
+   MODAL CONTAINER
+   ======================================== */
+
+.edit-link-modal {
+  background: var(--color-bg-primary);
+  border-radius: 12px;
+  box-shadow: var(--shadow-xl);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================
+   URL INPUT CONTAINER
+   ======================================== */
+
+.url-input-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.url-input {
+  flex: 1;
+}
+
+.url-display {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+}
+
+.url-text {
+  flex: 1;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.visit-link-btn {
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 6px;
+  color: var(--color-text-primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.visit-link-btn:hover {
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-accent-primary);
+  transform: scale(1.05);
+}
+
+/* ========================================
+   FORM ELEMENTS
+   ======================================== */
+
+/* Inherits most styles from AddLinkModal.css */
+.edit-link-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.edit-link-modal .modal-header h2 {
+  color: var(--color-text-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.edit-link-modal .close-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-link-modal .close-btn:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.edit-link-modal .close-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.edit-link-modal .modal-form {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.edit-link-modal .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.edit-link-modal .form-group label {
+  display: block;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Form Inputs */
+.edit-link-modal .form-input,
+.edit-link-modal .form-textarea,
+.edit-link-modal .form-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.edit-link-modal .form-input:focus,
+.edit-link-modal .form-textarea:focus,
+.edit-link-modal .form-select:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 2px var(--color-accent-light);
+}
+
+.edit-link-modal .form-input::placeholder,
+.edit-link-modal .form-textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.edit-link-modal .form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ========================================
+   TAGS SECTION
+   ======================================== */
+
+.edit-link-modal .selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.edit-link-modal .tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-link-modal .tag.selected {
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+}
+
+.edit-link-modal .tag-remove {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0.1rem;
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.edit-link-modal .tag-remove:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Tag Input Section */
+.edit-link-modal .tag-input-section {
+  margin-bottom: 1rem;
+}
+
+.edit-link-modal .new-tag-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.edit-link-modal .tag-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 6px;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-size: 0.8rem;
+}
+
+.edit-link-modal .add-tag-btn,
+.edit-link-modal .cancel-tag-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-link-modal .add-tag-btn {
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+}
+
+.edit-link-modal .add-tag-btn:hover {
+  background: var(--color-accent-hover);
+}
+
+.edit-link-modal .cancel-tag-btn {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+.edit-link-modal .cancel-tag-btn:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.edit-link-modal .show-tag-input-btn {
+  padding: 0.5rem 1rem;
+  border: 1px dashed var(--color-border-primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-link-modal .show-tag-input-btn:hover {
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
+}
+
+/* ========================================
+   CHECKBOX
+   ======================================== */
+
+.edit-link-modal .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.edit-link-modal .form-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent-primary);
+}
+
+.edit-link-modal .checkbox-text {
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+}
+
+/* ========================================
+   ERROR MESSAGE
+   ======================================== */
+
+.edit-link-modal .error-message {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #dc2626;
+}
+
+[data-theme="dark"] .edit-link-modal .error-message {
+  background: #7f1d1d;
+  color: #fecaca;
+}
+
+/* ========================================
+   FORM ACTIONS
+   ======================================== */
+
+.edit-link-modal .form-actions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-primary);
+  margin-top: 1rem;
+}
+
+.edit-link-modal .btn {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.edit-link-modal .btn-primary {
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+}
+
+.edit-link-modal .btn-primary:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+
+.edit-link-modal .btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.edit-link-modal .btn-secondary {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-primary);
+}
+
+.edit-link-modal .btn-secondary:hover:not(:disabled) {
+  background: var(--color-bg-tertiary);
+  transform: translateY(-1px);
+}
+
+.edit-link-modal .btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 480px) {
+  .edit-link-modal {
+    max-height: 95vh;
+  }
+  
+  .edit-link-modal .modal-header {
+    padding: 1rem;
+  }
+  
+  .edit-link-modal .modal-form {
+    padding: 1rem;
+  }
+  
+  .edit-link-modal .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .edit-link-modal .new-tag-input {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .edit-link-modal .form-actions {
+    flex-direction: column;
+  }
+  
+  .url-input-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .url-display {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .visit-link-btn {
+    align-self: flex-end;
+  }
+}

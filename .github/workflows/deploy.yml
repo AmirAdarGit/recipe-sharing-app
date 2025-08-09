@@ -1,121 +1,121 @@
-name: Deploy to Production
+# name: Deploy to Production
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
 
-# Add permissions for the workflow
-permissions:
-  contents: read
-  deployments: write
-  statuses: write
-  pull-requests: write
+# # Add permissions for the workflow
+# permissions:
+#   contents: read
+#   deployments: write
+#   statuses: write
+#   pull-requests: write
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
       
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: 'npm'
+#       - uses: actions/setup-node@v4
+#         with:
+#           node-version: '24'
+#           cache: 'npm'
           
-      - name: Install dependencies
-        run: |
-          cd client && npm ci
-          cd ../server && npm ci
+#       - name: Install dependencies
+#         run: |
+#           cd client && npm ci
+#           cd ../server && npm ci
           
-      - name: Lint and test
-        run: |
-          cd client && npm run lint || echo "No lint script"
-          cd ../server && npm run lint || echo "No lint script"
+#       - name: Lint and test
+#         run: |
+#           cd client && npm run lint || echo "No lint script"
+#           cd ../server && npm run lint || echo "No lint script"
 
-  deploy-frontend:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
+#   deploy-frontend:
+#     needs: test
+#     runs-on: ubuntu-latest
+#     if: github.ref == 'refs/heads/main'
+#     steps:
+#       - uses: actions/checkout@v4
       
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: 'npm'
+#       - uses: actions/setup-node@v4
+#         with:
+#           node-version: '24'
+#           cache: 'npm'
           
-      - name: Install and Build
-        run: |
-          cd client
-          npm ci
-          npm run build
-        env:
-          VITE_API_URL: https://recipe-sharing-app-production.up.railway.app
-          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+#       - name: Install and Build
+#         run: |
+#           cd client
+#           npm ci
+#           npm run build
+#         env:
+#           VITE_API_URL: https://recipe-sharing-app-production.up.railway.app
+#           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+#           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+#           VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+#           VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
 
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3.0
-        with:
-          publish-dir: './client/dist'
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
-          enable-pull-request-comment: false
-          enable-commit-comment: false
-          enable-commit-status: false
-          enable-github-deployment: false
-          overwrites-pull-request-comment: false
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+#       - name: Deploy to Netlify
+#         uses: nwtgck/actions-netlify@v3.0
+#         with:
+#           publish-dir: './client/dist'
+#           production-branch: main
+#           github-token: ${{ secrets.GITHUB_TOKEN }}
+#           deploy-message: "Deploy from GitHub Actions"
+#           enable-pull-request-comment: false
+#           enable-commit-comment: false
+#           enable-commit-status: false
+#           enable-github-deployment: false
+#           overwrites-pull-request-comment: false
+#         env:
+#           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+#           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-  deploy-backend:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
+#   deploy-backend:
+#     needs: test
+#     runs-on: ubuntu-latest
+#     if: github.ref == 'refs/heads/main'
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Install Railway CLI
-        run: |
-          npm install -g @railway/cli@latest
-          railway --version
+#       - name: Install Railway CLI
+#         run: |
+#           npm install -g @railway/cli@latest
+#           railway --version
 
-      - name: Verify Railway Authentication
-        run: |
-          echo "🔐 Verifying Railway authentication..."
-          if [ -z "$RAILWAY_TOKEN" ]; then
-            echo "❌ RAILWAY_TOKEN is not set"
-            exit 1
-          fi
-          echo "✅ Railway token is configured"
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+#       - name: Verify Railway Authentication
+#         run: |
+#           echo "🔐 Verifying Railway authentication..."
+#           if [ -z "$RAILWAY_TOKEN" ]; then
+#             echo "❌ RAILWAY_TOKEN is not set"
+#             exit 1
+#           fi
+#           echo "✅ Railway token is configured"
+#         env:
+#           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
-      - name: Deploy to Railway
-        run: |
-          echo "🚀 Starting Railway deployment..."
-          echo "📋 Railway CLI version:"
-          railway --version
+#       - name: Deploy to Railway
+#         run: |
+#           echo "🚀 Starting Railway deployment..."
+#           echo "📋 Railway CLI version:"
+#           railway --version
           
-          # Login using token
-          echo "🔐 Authenticating with Railway..."
-          echo "$RAILWAY_TOKEN" | railway login --token
+#           # Login using token
+#           echo "🔐 Authenticating with Railway..."
+#           echo "$RAILWAY_TOKEN" | railway login --token
           
-          # Verify authentication
-          echo "� Checking Railway connection..."
-          railway whoami
+#           # Verify authentication
+#           echo "� Checking Railway connection..."
+#           railway whoami
           
-          # Deploy the application
-          echo "🚀 Deploying to Railway..."
-          railway up --detach
+#           # Deploy the application
+#           echo "🚀 Deploying to Railway..."
+#           railway up --detach
           
-          echo "✅ Railway deployment completed successfully"
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        working-directory: ./server
+#           echo "✅ Railway deployment completed successfully"
+#         env:
+#           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+#         working-directory: ./server
