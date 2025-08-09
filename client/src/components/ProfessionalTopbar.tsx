@@ -109,6 +109,10 @@ const ProfessionalTopbar: React.FC = () => {
                   <span className="nav__icon">📚</span>
                   <span className="nav__text">My Recipes</span>
                 </Link>
+                <Link to="/saved-links" className="nav__link">
+                  <span className="nav__icon">🔗</span>
+                  <span className="nav__text">Saved Links</span>
+                </Link>
                 <Link to="/categories" className="nav__link">
                   <span className="nav__icon">📖</span>
                   <span className="nav__text">Categories</span>
@@ -305,6 +309,10 @@ const ProfessionalTopbar: React.FC = () => {
               <Link to="/my-recipes" className="mobile__link">
                 <span className="mobile__icon">📚</span>
                 <span>My Recipes</span>
+              </Link>
+              <Link to="/saved-links" className="mobile__link">
+                <span className="mobile__icon">🔗</span>
+                <span>Saved Links</span>
               </Link>
               <Link to="/categories" className="mobile__link">
                 <span className="mobile__icon">📖</span>
