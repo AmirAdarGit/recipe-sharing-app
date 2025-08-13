@@ -1,0 +1,488 @@
+/* 
+ * UserProfileCard Component Styles - Mobile-First Responsive Design
+ * Professional user profile cards with social interactions and theme support
+ */
+
+/* ========================================
+   USER PROFILE CARD LAYOUT
+   ======================================== */
+
+.user-profile-card {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.user-profile-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-accent-primary);
+}
+
+/* Compact variant */
+.user-profile-card.compact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+/* ========================================
+   PROFILE HEADER
+   ======================================== */
+
+.profile-header {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.user-profile-card.compact .profile-header {
+  margin-bottom: 0;
+}
+
+/* ========================================
+   PROFILE LINK & AVATAR
+   ======================================== */
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-link:hover {
+  transform: translateX(2px);
+}
+
+.profile-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border-primary);
+  transition: border-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.profile-avatar.large {
+  width: 64px;
+  height: 64px;
+  border-width: 3px;
+}
+
+.profile-avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  border: 2px solid var(--color-border-primary);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.profile-avatar-placeholder.large {
+  width: 64px;
+  height: 64px;
+  font-size: 1.5rem;
+  border-width: 3px;
+}
+
+.profile-link:hover .profile-avatar,
+.profile-link:hover .profile-avatar-placeholder {
+  border-color: var(--color-accent-primary);
+  transform: scale(1.05);
+}
+
+/* ========================================
+   PROFILE INFO
+   ======================================== */
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.profile-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-name-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  text-align: left;
+  padding: 0;
+  margin-bottom: 0.5rem;
+}
+
+.profile-name-link:hover {
+  color: var(--color-accent-primary);
+}
+
+.profile-name {
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.user-profile-card:not(.compact) .profile-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.profile-link:hover .profile-name,
+.profile-name-link:hover .profile-name {
+  color: var(--color-accent-primary);
+}
+
+.profile-bio {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0 0 1rem 0;
+  
+  /* Truncate long bios */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ========================================
+   PROFILE STATS
+   ======================================== */
+
+.profile-stats {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.user-profile-card.compact .profile-stats {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+}
+
+.user-profile-card.compact .stat-item {
+  flex-direction: row;
+  gap: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+  margin-bottom: 0.25rem;
+}
+
+.user-profile-card.compact .stat-value {
+  font-size: 0.8rem;
+  margin-bottom: 0;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.user-profile-card.compact .stat-label {
+  font-size: 0.7rem;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* ========================================
+   PROFILE ACTIONS
+   ======================================== */
+
+.profile-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.follow-btn {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--color-accent-primary);
+  border-radius: 8px;
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+  flex: 1;
+}
+
+.user-profile-card.compact .follow-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  min-height: 36px;
+  flex: none;
+  white-space: nowrap;
+}
+
+.follow-btn:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.follow-btn.following {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-primary);
+}
+
+.follow-btn.following:hover {
+  background: var(--color-error);
+  color: var(--color-text-inverse);
+  border-color: var(--color-error);
+}
+
+.follow-btn.following:hover::after {
+  content: ' Unfollow';
+}
+
+.follow-btn.following:hover {
+  content: '';
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 480px) {
+  .user-profile-card {
+    padding: 1rem;
+  }
+  
+  .profile-header {
+    gap: 0.75rem;
+  }
+  
+  .profile-avatar,
+  .profile-avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .profile-avatar.large,
+  .profile-avatar-placeholder.large {
+    width: 56px;
+    height: 56px;
+    font-size: 1.3rem;
+  }
+  
+  .profile-name {
+    font-size: 0.9rem;
+  }
+  
+  .user-profile-card:not(.compact) .profile-name {
+    font-size: 1rem;
+  }
+  
+  .profile-bio {
+    font-size: 0.85rem;
+    -webkit-line-clamp: 1;
+  }
+  
+  .profile-stats {
+    gap: 0.75rem;
+  }
+  
+  .stat-value {
+    font-size: 1rem;
+  }
+  
+  .stat-label {
+    font-size: 0.7rem;
+  }
+  
+  .follow-btn {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.85rem;
+  }
+  
+  .user-profile-card.compact {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+  
+  .user-profile-card.compact .follow-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    min-height: 32px;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+.profile-link:focus,
+.profile-name-link:focus,
+.follow-btn:focus {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .user-profile-card {
+    border-width: 2px;
+  }
+  
+  .profile-avatar,
+  .profile-avatar-placeholder {
+    border-width: 3px;
+  }
+  
+  .profile-avatar.large,
+  .profile-avatar-placeholder.large {
+    border-width: 4px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .user-profile-card,
+  .profile-link,
+  .profile-avatar,
+  .profile-avatar-placeholder,
+  .follow-btn {
+    transition: none;
+  }
+  
+  .user-profile-card:hover {
+    transform: none;
+  }
+  
+  .profile-link:hover .profile-avatar,
+  .profile-link:hover .profile-avatar-placeholder {
+    transform: none;
+  }
+  
+  .follow-btn:hover {
+    transform: none;
+  }
+}
+
+/* ========================================
+   LOADING STATE
+   ======================================== */
+
+.user-profile-card.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ========================================
+   DARK THEME ADJUSTMENTS
+   ======================================== */
+
+[data-theme="dark"] .user-profile-card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .user-profile-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================
+   VERIFIED BADGE (FUTURE ENHANCEMENT)
+   ======================================== */
+
+.profile-name-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.verified-badge {
+  width: 16px;
+  height: 16px;
+  background: var(--color-accent-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-inverse);
+  font-size: 0.7rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* ========================================
+   ONLINE STATUS INDICATOR (FUTURE ENHANCEMENT)
+   ======================================== */
+
+.profile-avatar-container {
+  position: relative;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: var(--color-success);
+  border: 2px solid var(--color-bg-primary);
+  border-radius: 50%;
+}
+
+.online-indicator.large {
+  width: 16px;
+  height: 16px;
+  border-width: 3px;
+}

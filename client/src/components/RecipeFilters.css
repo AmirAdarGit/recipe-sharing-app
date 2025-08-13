@@ -1,0 +1,403 @@
+/* 
+ * RecipeFilters Component Styles - Mobile-First Responsive Design
+ * Advanced filtering interface with collapsible sections and theme support
+ */
+
+/* ========================================
+   FILTERS CONTAINER
+   ======================================== */
+
+.recipe-filters {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-colors);
+}
+
+/* ========================================
+   FILTERS HEADER
+   ======================================== */
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.filters-header h3 {
+  color: var(--color-text-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.clear-all-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-error);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-error);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-all-btn:hover {
+  background: var(--color-error);
+  color: var(--color-text-inverse);
+}
+
+/* ========================================
+   FILTER SECTIONS
+   ======================================== */
+
+.filter-section {
+  margin-bottom: 1.5rem;
+}
+
+.filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.section-header:hover {
+  color: var(--color-accent-primary);
+}
+
+.section-header.expanded {
+  color: var(--color-accent-primary);
+}
+
+.section-title {
+  text-align: left;
+}
+
+.section-toggle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: transform 0.2s ease;
+}
+
+.section-header.expanded .section-toggle {
+  transform: rotate(180deg);
+}
+
+.section-content {
+  padding-top: 1rem;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   FILTER GROUPS
+   ======================================== */
+
+.filter-group {
+  margin-bottom: 1rem;
+}
+
+.filter-group:last-child {
+  margin-bottom: 0;
+}
+
+.filter-label {
+  display: block;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 2px var(--color-accent-light);
+}
+
+/* ========================================
+   CHECKBOX GRID
+   ======================================== */
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 481px) {
+  .checkbox-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 769px) {
+  .checkbox-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkbox-item:hover {
+  color: var(--color-accent-primary);
+}
+
+.checkbox-input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent-primary);
+  cursor: pointer;
+}
+
+.checkbox-label {
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.checkbox-item:hover .checkbox-label {
+  color: var(--color-accent-primary);
+}
+
+/* ========================================
+   SORT CONTROLS
+   ======================================== */
+
+.sort-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sort-controls .filter-select {
+  flex: 1;
+}
+
+.sort-order-btn {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sort-order-btn:hover {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
+}
+
+/* ========================================
+   ACTIVE FILTERS SUMMARY
+   ======================================== */
+
+.active-filters-summary {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-primary);
+}
+
+.active-filters-summary h4 {
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.active-filters-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.active-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-accent-light);
+  color: var(--color-accent-primary);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.active-filter button {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 0.1rem;
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.active-filter button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 480px) {
+  .recipe-filters {
+    padding: 1rem;
+  }
+  
+  .filters-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .clear-all-btn {
+    align-self: flex-end;
+  }
+  
+  .section-header {
+    font-size: 0.95rem;
+  }
+  
+  .filter-select {
+    font-size: 0.85rem;
+  }
+  
+  .checkbox-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sort-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .sort-order-btn {
+    width: 100%;
+    height: auto;
+    padding: 0.75rem;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+.section-header:focus {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+.checkbox-input:focus {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+.sort-order-btn:focus {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .filter-select,
+  .sort-order-btn {
+    border-width: 2px;
+  }
+  
+  .section-header {
+    border-bottom-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .section-content {
+    animation: none;
+  }
+  
+  .section-toggle {
+    transition: none;
+  }
+  
+  .filter-select,
+  .checkbox-item,
+  .sort-order-btn,
+  .active-filter button {
+    transition: none;
+  }
+}
+
+/* ========================================
+   DARK THEME ADJUSTMENTS
+   ======================================== */
+
+[data-theme="dark"] .active-filter {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .active-filter button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
